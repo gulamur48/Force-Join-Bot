@@ -1,9 +1,29 @@
 import logging
+import os
+import threading
+from http.server import HTTPServer, BaseHTTPRequestHandler
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.constants import ParseMode
 from telegram.ext import Application, CommandHandler, ContextTypes, CallbackQueryHandler
 
-# আপনার বট টোকেন
+# --- Render Port Fix Start ---
+class HealthCheckHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"Bot is running!")
+
+def run_health_check_server():
+    # Render নিজে থেকে একটি PORT এসাইন করে, সেটি খুঁজে বের করা
+    port = int(os.environ.get("PORT", 8000))
+    server = HTTPServer(('0.0.0.0', port), HealthCheckHandler)
+    server.serve_forever()
+
+# আলাদা থ্রেডে সার্ভার চালু করা যাতে বটের কাজে বাধা না দেয়
+threading.Thread(target=run_health_check_server, daemon=True).start()
+# --- Render Port Fix End ---
+
+# আপনার বট টোকেন (আপনার নতুন টোকেনটি এখানে দিন)
 TOKEN = '8510787985:AAGZ9KA-16hl8Tc3H1_GM-D3qCMIGygOUkw' 
 
 # আপনার ৫টি চ্যানেলের ইউজারনেম
@@ -28,9 +48,6 @@ async def check_all_joined(user_id, context):
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     user_id = user.id
-    
-    # ইউজারের নাম স্টাইলিশ ভাবে নেওয়া (HTML Format)
-    # এখানে 👤 প্রতীক এবং Bold স্টাইল ব্যবহার করা হয়েছে
     stylish_name = f"👤 <b>{user.first_name}</b>"
     
     not_joined_indices = await check_all_joined(user_id, context)
@@ -46,7 +63,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         
         buttons.append([InlineKeyboardButton("Check Joined ✅", callback_data="check_status")])
         
-        # আপনার কাঙ্ক্ষিত মেসেজ স্টাইলিশ নামের সাথে
         caption = (
             f"Hello {stylish_name},\n\n"
             "🚨 <b>Attention Please!</b>\n\n"
@@ -55,17 +71,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "Join করে <b>Check Joined</b> ক্লিক করুন ✅"
         )
         
-        await update.message.reply_text(
-            caption, 
-            reply_markup=InlineKeyboardMarkup(buttons),
-            parse_mode=ParseMode.HTML # এটি স্টাইলিশ নাম এবং বোল্ড টেক্সট দেখানোর জন্য জরুরি
-        )
+        await update.message.reply_text(caption, reply_markup=InlineKeyboardMarkup(buttons), parse_mode=ParseMode.HTML)
 
 async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     user = query.from_user
     stylish_name = f"<b>{user.first_name}</b>"
-    
     not_joined_indices = await check_all_joined(user.id, context)
     
     if not not_joined_indices:
@@ -78,6 +89,5 @@ if __name__ == '__main__':
     app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(button_callback))
-    
-    print("বটটি এখন নাম মেনশন ফিচারের সাথে চালু হয়েছে...")
+    print("Bot is running with Render Fix...")
     app.run_polling()
