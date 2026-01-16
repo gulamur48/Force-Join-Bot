@@ -6,7 +6,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.constants import ParseMode
 from telegram.ext import Application, CommandHandler, ContextTypes, CallbackQueryHandler
 
-# --- Render Port Fix Start (Render-এর জন্য এটি অত্যাবশ্যক) ---
+# --- Render Port Fix Start (Render-এর জন্য এটি বাধ্যতামূলক) ---
 class HealthCheckHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
@@ -21,8 +21,8 @@ def run_health_check_server():
 threading.Thread(target=run_health_check_server, daemon=True).start()
 # --- Render Port Fix End ---
 
-# আপনার বট টোকেন
-TOKEN = '8510787985:AAH6Qc9t2JK9rZaj_iHIoSVUJx0_zy28FFc' 
+# আপনার আপডেট করা বট টোকেন
+TOKEN = '8510787985:AAHjszZmTMwqvqTfbFMJdqC548zBw4Qh0S0' 
 
 # আপনার ৫টি চ্যানেলের ইউজারনেম
 CHANNELS = ['@virallink259', '@viralfb24', '@fbviral24', '@viralfacebook9', '@viralexpress1']
@@ -56,7 +56,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     not_joined_indices = await check_all_joined(user_id, context)
 
     if not not_joined_indices:
-        # সব চ্যানেলে জয়েন থাকলে এই মেসেজটি দেখাবে
+        # সব চ্যানেলে জয়েন থাকলে এই সাকসেস মেসেজটি দেখাবে
         success_text = (
             f"🎉 স্বাগতম {stylish_name}\n"
             f"✅ আপনি সফলভাবে সব চ্যানেলে Join করেছেন ❤️\n"
@@ -106,5 +106,5 @@ if __name__ == '__main__':
     app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(button_callback))
-    print("Bot is running with Render Fix & Watch Button...")
+    print("Bot is running with full updates on Render...")
     app.run_polling()
