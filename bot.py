@@ -81,6 +81,21 @@ async def check_all_joined(user_id, bot):
             not_joined.append((cid,name,link))
     return not_joined
 
+async def check_specific_channels(user_id, bot, channel_ids):
+    not_joined = []
+    for cid in channel_ids:
+        cur.execute("SELECT name, link FROM channels WHERE id=?", (cid,))
+        res = cur.fetchone()
+        if res:
+            name, link = res
+            try:
+                member = await bot.get_chat_member(cid, user_id)
+                if member.status not in ["member", "administrator", "creator"]:
+                    not_joined.append((cid, name, link))
+            except:
+                not_joined.append((cid, name, link))
+    return not_joined
+
 # ================== STATES ==================
 BROADCAST_MODE = {}
 POST_TITLE, POST_PHOTO, POST_CHANNELS, POST_WEBSITE = range(4)
@@ -149,10 +164,10 @@ async def reminder(context):
         try: await context.bot.send_message(uid, "⏰ <b>Reminder!</b>\nভিডিও এখনও Unlock হয়নি 🔒", parse_mode=ParseMode.HTML)
         except: pass
 
-# ================== POST CREATION (FIXED) ==================
+# ================== POST CREATION (WITH SELECTION) ==================
 async def newpost(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_admin(update.effective_user.id): return
-    POST_CREATION[update.effective_user.id] = {'channels': set()}
+    POST_CREATION[update.effective_user.id] = {'force_chans': set()}
     await update.message.reply_text("📝 Please send the <b>Post Title</b>:", parse_mode=ParseMode.HTML)
     return POST_TITLE
 
@@ -166,32 +181,69 @@ async def post_photo_handler(update: Update, context: ContextTypes.DEFAULT_TYPE)
         await update.message.reply_text("❌ Photo পাঠান!")
         return POST_PHOTO
     POST_CREATION[update.effective_user.id]['photo'] = update.message.photo[-1].file_id
-    buttons = [[InlineKeyboardButton(name, callback_data=f"pchan|{cid}")] for cid,name,link in cur.execute("SELECT * FROM channels")]
-    buttons.append([InlineKeyboardButton("✅ Done Selecting", callback_data="pchan_done")])
-    await update.message.reply_text("📌 Select channels:", reply_markup=InlineKeyboardMarkup(buttons))
+    
+    # Selection buttons for channels
+    buttons = [[InlineKeyboardButton(f"➕ {name}", callback_data=f"fsel|{cid}")] for cid,name,link in cur.execute("SELECT * FROM channels")]
+    buttons.append([InlineKeyboardButton("✅ Done Selection", callback_data="fsel_done")])
+    
+    await update.message.reply_text("📌 ইউজারকে এই পোস্টটি দেখার জন্য কোন কোন চ্যানেলে জয়েন করতে হবে তা সিলেক্ট করুন:", 
+                                   reply_markup=InlineKeyboardMarkup(buttons), parse_mode=ParseMode.HTML)
     return POST_CHANNELS
 
 async def post_channels_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     uid = query.from_user.id
-    if query.data == "pchan_done":
-        await query.edit_message_text("✅ URL দিন (অথবা 'skip' লিখুন):")
+    if query.data == "fsel_done":
+        await query.edit_message_text("✅ এখন <b>Website URL</b> দিন (অথবা 'skip' লিখুন):")
         return POST_WEBSITE
+    
     cid = query.data.split("|")[1]
-    POST_CREATION[uid]['channels'].add(cid)
-    await query.answer("Added!")
+    POST_CREATION[uid]['force_chans'].add(cid)
+    await query.answer("Added to Force List!")
     return POST_CHANNELS
 
 async def post_website_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     uid = update.effective_user.id
     data = POST_CREATION[uid]
-    btn = InlineKeyboardMarkup([[InlineKeyboardButton("Visit Website 🌐", url=update.message.text)]]) if update.message.text.lower() != 'skip' else None
-    for cid in data['channels']:
-        try: await context.bot.send_photo(cid, data['photo'], caption=data['title'], reply_markup=btn, parse_mode=ParseMode.HTML)
+    url = update.message.text
+    
+    force_list = ",".join(data['force_chans']) if data['force_chans'] else "none"
+    watch_btn = InlineKeyboardMarkup([[InlineKeyboardButton("🎬 Watch Video", callback_data=f"v|{force_list}|{url}")]])
+    
+    users = cur.execute("SELECT user_id FROM users").fetchall()
+    for (u_id,) in users:
+        try:
+            await context.bot.send_photo(u_id, data['photo'], caption=data['title'], reply_markup=watch_btn, parse_mode=ParseMode.HTML)
+            await asyncio.sleep(0.05)
         except: pass
-    await update.message.reply_text("✅ Post Sent!")
+        
+    await update.message.reply_text("✅ Post Sent with Custom Force Join!")
     POST_CREATION.pop(uid, None)
     return ConversationHandler.END
+
+# ================== WATCH CALLBACK (DYNAMIC CHECK) ==================
+async def watch_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    uid = query.from_user.id
+    parts = query.data.split("|")
+    f_chans_raw = parts[1]
+    target_url = parts[2]
+
+    if f_chans_raw == "none":
+        not_joined = []
+    else:
+        f_chans = f_chans_raw.split(",")
+        not_joined = await check_specific_channels(uid, context.bot, f_chans)
+
+    if not not_joined:
+        final_url = WATCH_NOW_URL if target_url.lower() == 'skip' else target_url
+        await query.answer("✅ Verified!", show_alert=False)
+        await query.message.reply_text(f"🎉 আপনার ভিডিও লিঙ্কটি তৈরি:\n🔗 {final_url}")
+    else:
+        btns = [[InlineKeyboardButton(f"Join {n}", url=l)] for _,n,l in not_joined]
+        btns.append([InlineKeyboardButton("Verify Again ✅", callback_data=query.data)])
+        await query.message.reply_text("❌ আগে জয়েন করুন:", reply_markup=InlineKeyboardMarkup(btns))
+        await query.answer("Please Join Channels First!", show_alert=True)
 
 async def post_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     POST_CREATION.pop(update.effective_user.id, None)
@@ -240,7 +292,7 @@ post_handler = ConversationHandler(
     states={
         POST_TITLE: [MessageHandler(filters.TEXT & ~filters.COMMAND, post_title_handler)],
         POST_PHOTO: [MessageHandler(filters.PHOTO, post_photo_handler)],
-        POST_CHANNELS: [CallbackQueryHandler(post_channels_callback, pattern="^pchan")],
+        POST_CHANNELS: [CallbackQueryHandler(post_channels_callback, pattern="^fsel")],
         POST_WEBSITE: [MessageHandler(filters.TEXT & ~filters.COMMAND, post_website_handler)]
     },
     fallbacks=[CommandHandler("postcancel", post_cancel)]
@@ -253,6 +305,7 @@ app.add_handler(CommandHandler("addchannel", addchannel))
 app.add_handler(CommandHandler("listchannels", listchannels))
 app.add_handler(CommandHandler("broadcast", broadcast))
 app.add_handler(CommandHandler("postcancel", post_cancel))
+app.add_handler(CallbackQueryHandler(watch_callback, pattern="^v\|"))
 app.add_handler(CallbackQueryHandler(check_callback, pattern="check"))
 app.add_handler(MessageHandler(filters.ALL & (~filters.COMMAND), handle_broadcast))
 
