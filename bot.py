@@ -4,7 +4,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.constants import ParseMode
 from telegram.ext import (
     Application, CommandHandler, CallbackQueryHandler,
-    MessageHandler, filters, ContextTypes
+    MessageHandler, filters, ContextTypes, ConversationHandler
 )
 
 # ================== HEALTH CHECK ==================
@@ -87,25 +87,17 @@ BROADCAST_MODE = {}
 # ================== START ==================
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
-    if update.message is None:  # ensure message exists
-        return
+    if update.message is None: return
     uid = user.id
-
-    # Stylish name
     if user.first_name and user.last_name:
         stylish_name = f"<b>{user.first_name} {user.last_name}</b>"
     elif user.first_name:
         stylish_name = f"<b>{user.first_name}</b>"
     else:
         stylish_name = "<b>User</b>"
-
-    # Auto save user
     cur.execute("INSERT OR IGNORE INTO users(user_id) VALUES(?)",(uid,))
     db.commit()
-
-    # Check channels
     not_joined = await check_all_joined(uid, context.bot)
-
     if not not_joined:
         cur.execute("UPDATE users SET unlocked=1 WHERE user_id=?",(uid,))
         db.commit()
@@ -117,10 +109,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             parse_mode=ParseMode.HTML
         )
     else:
-        # Button List
         buttons = [[InlineKeyboardButton(f"Join {name}", url=link)] for _,name,link in not_joined]
         buttons.append([InlineKeyboardButton("Check Joined ✅", callback_data="check")])
-
         caption = (
             f"Hello 👤 {stylish_name},\n\n"
             "🚨 <b>Attention Please!</b>\n\n"
@@ -128,7 +118,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "সবগুলো চ্যানেল Join না করলে ভিডিও লিঙ্ক কাজ করবে না ❌\n\n"
             "Join শেষ হলে <b>Check Joined</b> ক্লিক করুন ✅"
         )
-
         await update.message.reply_text(
             caption,
             reply_markup=InlineKeyboardMarkup(buttons),
@@ -140,9 +129,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def check(update: Update, context: ContextTypes.DEFAULT_TYPE):
     uid = update.effective_user.id
     stylish_name = f"<b>{update.effective_user.first_name}</b>"
-
     not_joined = await check_all_joined(uid, context.bot)
-
     if not not_joined:
         cur.execute("UPDATE users SET unlocked=1 WHERE user_id=?",(uid,))
         db.commit()
@@ -161,9 +148,7 @@ async def check_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     uid = query.from_user.id
     stylish_name = f"<b>{query.from_user.first_name}</b>"
-
     not_joined = await check_all_joined(uid, context.bot)
-
     if not not_joined:
         cur.execute("UPDATE users SET unlocked=1 WHERE user_id=?",(uid,))
         db.commit()
@@ -182,15 +167,13 @@ async def reminder(context):
     uid = context.data
     cur.execute("SELECT unlocked FROM users WHERE user_id=?",(uid,))
     r = cur.fetchone()
-    if r and r[0] == 0:
+    if r and r[0]==0:
         try:
-            await context.bot.send_message(
-                uid,
+            await context.bot.send_message(uid,
                 "⏰ <b>Reminder!</b>\nভিডিও এখনও Unlock হয়নি 🔒",
                 parse_mode=ParseMode.HTML
             )
-        except:
-            pass
+        except: pass
 
 # ================== ADMIN COMMANDS ==================
 async def addchannel(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -233,15 +216,12 @@ async def handle_broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
     uid = update.effective_user.id
     if not BROADCAST_MODE.get(uid): return
     BROADCAST_MODE.pop(uid)
-
     button = None
     text = update.message.caption or update.message.text
-
     if "|" in text:
         btn_text, btn_url = text.split("|",1)
         button = InlineKeyboardMarkup([[InlineKeyboardButton(btn_text.strip(), url=btn_url.strip())]])
         text = text.split("|")[0].strip()
-
     users = cur.execute("SELECT user_id FROM users").fetchall()
     sent = 0
     for (user_id,) in users:
@@ -259,14 +239,84 @@ async def handle_broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
                                                parse_mode=ParseMode.HTML)
             sent+=1
             await asyncio.sleep(0.05)
-        except:
-            pass
-
+        except: pass
     await update.message.reply_text(f"✅ Broadcast Done\n👥 Sent to {sent} users")
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     BROADCAST_MODE.pop(update.effective_user.id, None)
     await update.message.reply_text("❌ Broadcast Cancelled")
+
+# ================== NEW FEATURE: POST CREATION ==================
+POST_TITLE, POST_PHOTO, POST_CHANNELS, POST_WEBSITE = range(4)
+POST_CREATION = {}
+
+async def newpost(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not is_admin(update.effective_user.id): return
+    POST_CREATION[update.effective_user.id] = {}
+    await update.message.reply_text("📝 Please send the <b>Post Title</b>:", parse_mode=ParseMode.HTML)
+    return POST_TITLE
+
+async def post_title(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    uid = update.effective_user.id
+    POST_CREATION[uid]['title'] = update.message.text
+    await update.message.reply_text("📸 Now send the <b>Post Photo</b>:", parse_mode=ParseMode.HTML)
+    return POST_PHOTO
+
+async def post_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    uid = update.effective_user.id
+    if not update.message.photo:
+        await update.message.reply_text("❌ Please send a valid photo.")
+        return POST_PHOTO
+    POST_CREATION[uid]['photo'] = update.message.photo[-1].file_id
+    # Show channels for multi-select
+    buttons=[]
+    for cid,name,link in cur.execute("SELECT * FROM channels"):
+        buttons.append([InlineKeyboardButton(name, callback_data=f"postchan|{cid}")])
+    buttons.append([InlineKeyboardButton("✅ Done Selecting Channels", callback_data="postchan_done")])
+    POST_CREATION[uid]['channels'] = set()
+    await update.message.reply_text(
+        "📌 Select channels for this post (multiple select):",
+        reply_markup=InlineKeyboardMarkup(buttons)
+    )
+    return POST_CHANNELS
+
+async def post_channels(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    uid = query.from_user.id
+    data = query.data
+    if data=="postchan_done":
+        await query.edit_message_text("✅ Channel selection completed. Now send the <b>Website URL</b> (or type 'skip'):", parse_mode=ParseMode.HTML)
+        return POST_WEBSITE
+    else:
+        _, cid = data.split("|",1)
+        POST_CREATION[uid]['channels'].add(cid)
+        await query.answer(f"Channel selected!")
+        return POST_CHANNELS
+
+async def post_website(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    uid = update.effective_user.id
+    text = update.message.text
+    POST_CREATION[uid]['website'] = None if text.lower()=="skip" else text
+    # Auto post to selected channels
+    channels = POST_CREATION[uid]['channels']
+    photo = POST_CREATION[uid]['photo']
+    title = POST_CREATION[uid]['title']
+    website = POST_CREATION[uid]['website']
+    button=None
+    if website:
+        button = InlineKeyboardMarkup([[InlineKeyboardButton("Visit Website", url=website)]])
+    for cid in channels:
+        try:
+            await context.bot.send_photo(chat_id=cid,
+                                         photo=photo,
+                                         caption=title,
+                                         reply_markup=button,
+                                         parse_mode=ParseMode.HTML)
+            await asyncio.sleep(0.1)
+        except: pass
+    await update.message.reply_text("✅ Post sent to selected channels successfully!")
+    POST_CREATION.pop(uid)
+    return ConversationHandler.END
 
 # ================== RUN BOT ==================
 app = Application.builder().token(TOKEN).build()
@@ -286,5 +336,18 @@ app.add_handler(CommandHandler("cancel", cancel))
 # Broadcast handler
 app.add_handler(MessageHandler(filters.ALL & (~filters.COMMAND), handle_broadcast))
 
-print("🔥 FULL FORCE JOIN BOT RUNNING...")
+# --- POST CREATION HANDLER ---
+post_conv = ConversationHandler(
+    entry_points=[CommandHandler("newpost", newpost)],
+    states={
+        POST_TITLE: [MessageHandler(filters.TEXT & (~filters.COMMAND), post_title)],
+        POST_PHOTO: [MessageHandler(filters.PHOTO, post_photo)],
+        POST_CHANNELS: [CallbackQueryHandler(post_channels, pattern="^postchan")],
+        POST_WEBSITE: [MessageHandler(filters.TEXT & (~filters.COMMAND), post_website)]
+    },
+    fallbacks=[CommandHandler("cancel", cancel)],
+)
+app.add_handler(post_conv)
+
+print("🔥 FULL FORCE JOIN BOT WITH POST CREATION RUNNING...")
 app.run_polling()
