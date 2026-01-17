@@ -23,7 +23,7 @@ threading.Thread(target=run_health_check_server, daemon=True).start()
 
 # ================== CONFIG ==================
 TOKEN = "8510787985:AAHjszZmTMwqvqTfbFMJdqC548zBw4Qh0S0"
-ADMIN_IDS = [6406804999]  # নিজের Telegram User ID
+ADMIN_IDS = [6406804999]
 WATCH_NOW_URL = "https://mmshotbd.blogspot.com/?m=1"
 
 logging.basicConfig(level=logging.INFO)
@@ -130,6 +130,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # ================== CHECK CALLBACK ==================
 async def check_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
+    await query.answer()
     uid = query.from_user.id
     not_joined = await check_all_joined(uid, context.bot)
     if not not_joined:
@@ -140,7 +141,7 @@ async def check_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await query.answer("❌ এখনো সব চ্যানেল Join করেননি!", show_alert=True)
 
-# ================== NEW POST WIZARD (ENHANCED) ==================
+# ================== NEW POST WIZARD ==================
 def get_channel_markup(selected_list, prefix):
     keyboard = []
     cur.execute("SELECT id, name FROM channels")
@@ -153,12 +154,12 @@ def get_channel_markup(selected_list, prefix):
 async def newpost(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_admin(update.effective_user.id): return
     POST_CREATION[update.effective_user.id] = {'force': set(), 'target': set()}
-    await update.message.reply_text("📝 **ধাপ ১:** পোস্টের ক্যাপশন বা টাইটেল দিন:")
+    await update.message.reply_text("📝 **ধাপ ১:** পোস্টের ক্যাপশন বা টাইটেল দিন:", parse_mode=ParseMode.MARKDOWN)
     return POST_TITLE
 
 async def post_title_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     POST_CREATION[update.effective_user.id]['title'] = update.message.text
-    await update.message.reply_text("📸 **ধাপ ২:** এবার পোস্টের জন্য একটি ফটো পাঠান:")
+    await update.message.reply_text("📸 **ধাপ ২:** পোস্টের জন্য একটি ফটো পাঠান:", parse_mode=ParseMode.MARKDOWN)
     return POST_PHOTO
 
 async def post_photo_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -166,7 +167,7 @@ async def post_photo_handler(update: Update, context: ContextTypes.DEFAULT_TYPE)
         await update.message.reply_text("❌ ফটো পাঠান!")
         return POST_PHOTO
     POST_CREATION[update.effective_user.id]['photo'] = update.message.photo[-1].file_id
-    await update.message.reply_text("🔗 **ধাপ ৩:** ওয়েবসাইট বা ভিডিও লিঙ্ক দিন (বা 'skip' লিখুন):")
+    await update.message.reply_text("🔗 **ধাপ ৩:** ওয়েবসাইট বা ভিডিও লিঙ্ক দিন (বা 'skip' লিখুন):", parse_mode=ParseMode.MARKDOWN)
     return POST_WEBSITE
 
 async def post_website_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -174,11 +175,12 @@ async def post_website_handler(update: Update, context: ContextTypes.DEFAULT_TYP
     POST_CREATION[update.effective_user.id]['link'] = WATCH_NOW_URL if text.lower() == 'skip' else text
     uid = update.effective_user.id
     await update.message.reply_text("🛡️ **ধাপ ৪:** ফোর্স জয়েন চ্যানেলগুলো সিলেক্ট করুন:", 
-                                   reply_markup=get_channel_markup(POST_CREATION[uid]['force'], "fsel"))
+                                   reply_markup=get_channel_markup(POST_CREATION[uid]['force'], "fsel"), parse_mode=ParseMode.MARKDOWN)
     return POST_FORCE_CHANS
 
 async def post_force_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
+    await query.answer()
     uid = query.from_user.id
     if query.data == "fsel_done":
         await query.edit_message_text("📢 **ধাপ ৫:** পোস্টটি কোন কোন চ্যানেলে পাঠাতে চান? সিলেক্ট করুন:", 
@@ -192,6 +194,7 @@ async def post_force_callback(update: Update, context: ContextTypes.DEFAULT_TYPE
 
 async def post_target_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
+    await query.answer()
     uid = query.from_user.id
     if query.data == "tsel_done":
         if not POST_CREATION[uid]['target']:
@@ -211,13 +214,11 @@ async def post_target_callback(update: Update, context: ContextTypes.DEFAULT_TYP
 
 async def final_send_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
+    await query.answer()
     uid = query.from_user.id
     data = POST_CREATION[uid]
     force_ids = ",".join(data['force']) if data['force'] else "none"
-    
-    # ভিডিও ওয়াচ বাটন লজিক
     btn = InlineKeyboardMarkup([[InlineKeyboardButton("🎬 Watch Video 🔞", callback_data=f"v|{force_ids}|{data['link']}")]])
-    
     success = 0
     for t_cid in data['target']:
         try:
@@ -229,15 +230,14 @@ async def final_send_handler(update: Update, context: ContextTypes.DEFAULT_TYPE)
     POST_CREATION.pop(uid, None)
     return ConversationHandler.END
 
-# ================== WATCH CALLBACK (DYNAMIC VERIFICATION) ==================
+# ================== WATCH CALLBACK ==================
 async def watch_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
+    await query.answer()
     uid = query.from_user.id
     _, force_str, url = query.data.split("|", 2)
-    
     required_ids = [] if force_str == "none" else force_str.split(",")
     not_joined = await check_specific_channels(uid, context.bot, required_ids)
-    
     if not not_joined:
         await query.answer("✅ Access Granted!")
         try: await context.bot.send_message(uid, f"🚀 **Your Video Link:**\n{url}", parse_mode=ParseMode.HTML)
@@ -248,7 +248,7 @@ async def watch_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         buttons.append([InlineKeyboardButton("♻️ Try Again", callback_data=query.data)])
         await context.bot.send_message(uid, "🚫 **ভিডিওটি দেখতে নিচের চ্যানেলগুলোতে জয়েন থাকতে হবে:**", reply_markup=InlineKeyboardMarkup(buttons))
 
-# ================== OTHER ADMIN COMMANDS ==================
+# ================== BROADCAST ==================
 async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_admin(update.effective_user.id): return
     BROADCAST_MODE[update.effective_user.id] = True
