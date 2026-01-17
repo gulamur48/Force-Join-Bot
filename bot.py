@@ -89,45 +89,66 @@ BROADCAST_MODE = {}
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     uid = user.id
-    name = f"<b>{user.first_name}</b>"
+
+    # Stylish name
+    if user.first_name and user.last_name:
+        stylish_name = f"<b>{user.first_name} {user.last_name}</b>"
+    elif user.first_name:
+        stylish_name = f"<b>{user.first_name}</b>"
+    else:
+        stylish_name = "<b>User</b>"
 
     # Auto save user
     cur.execute("INSERT OR IGNORE INTO users(user_id) VALUES(?)",(uid,))
     db.commit()
 
+    # Check channels
     not_joined = await check_all_joined(uid, context.bot)
 
     if not not_joined:
         cur.execute("UPDATE users SET unlocked=1 WHERE user_id=?",(uid,))
         db.commit()
         await update.message.reply_text(
-            f"🎉 স্বাগতম 👤 {name}\n✅ আপনি সফলভাবে সব চ্যানেলে Join করেছেন ❤️",
+            f"🎉 স্বাগতম 👤 {stylish_name}\n✅ আপনি সফলভাবে সব চ্যানেলে Join করেছেন ❤️",
             reply_markup=InlineKeyboardMarkup(
                 [[InlineKeyboardButton("Watch Now 🎬", url=WATCH_NOW_URL)]]
             ),
             parse_mode=ParseMode.HTML
         )
     else:
-        buttons = [[InlineKeyboardButton(f"Join {n}", url=l)] for _,n,l in not_joined]
+        # Button List
+        buttons = [[InlineKeyboardButton(f"Join {name}", url=link)] for _,name,link in not_joined]
         buttons.append([InlineKeyboardButton("Check Joined ✅", callback_data="check")])
+
+        caption = (
+            f"Hello 👤 {stylish_name},\n\n"
+            "🚨 <b>Attention Please!</b>\n\n"
+            "Viral ভিডিও দেখার আগে আমাদের নিচের Channel গুলোতে Join করা বাধ্যতামূলক।\n"
+            "সবগুলো চ্যানেল Join না করলে ভিডিও লিঙ্ক কাজ করবে না ❌\n\n"
+            "Join শেষ হলে <b>Check Joined</b> ক্লিক করুন ✅"
+        )
+
         await update.message.reply_text(
-            "🚨 <b>ভিডিও Unlock করতে নিচের সব Channel Join করুন</b>",
+            caption,
             reply_markup=InlineKeyboardMarkup(buttons),
             parse_mode=ParseMode.HTML
         )
+        # Reminder after 2 minutes
         context.job_queue.run_once(reminder, 120, data=uid)
 
 # ================== CHECK JOIN ==================
 async def check_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     uid = query.from_user.id
+    stylish_name = f"<b>{query.from_user.first_name}</b>"
+
     not_joined = await check_all_joined(uid, context.bot)
 
     if not not_joined:
         cur.execute("UPDATE users SET unlocked=1 WHERE user_id=?",(uid,))
         db.commit()
         await query.edit_message_text(
-            "🎉 <b>Unlock Successful!</b>",
+            f"🎉 স্বাগতম 👤 {stylish_name}\n✅ আপনি সফলভাবে সব চ্যানেলে Join করেছেন ❤️",
             reply_markup=InlineKeyboardMarkup(
                 [[InlineKeyboardButton("Watch Now 🎬", url=WATCH_NOW_URL)]]
             ),
@@ -232,21 +253,16 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     BROADCAST_MODE.pop(update.effective_user.id, None)
     await update.message.reply_text("❌ Broadcast Cancelled")
 
-# ================== RUN ==================
-from telegram.ext import MessageHandler, filters
-
+# ================== RUN BOT ==================
 app = Application.builder().token(TOKEN).build()
 
-# Command Handlers
 app.add_handler(CommandHandler("start", start))
-app.add_handler(CallbackQueryHandler(check_callback,"check"))
+app.add_handler(CallbackQueryHandler(check_callback, "check"))
 app.add_handler(CommandHandler("addchannel", addchannel))
 app.add_handler(CommandHandler("removechannel", removechannel))
 app.add_handler(CommandHandler("listchannels", listchannels))
 app.add_handler(CommandHandler("broadcast", broadcast))
 app.add_handler(CommandHandler("cancel", cancel))
-
-# Message Handler for Broadcast Content
 app.add_handler(MessageHandler(filters.ALL, handle_broadcast_content))
 
 print("🔥 FORCE JOIN BOT with Broadcast running...")
