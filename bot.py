@@ -68,9 +68,9 @@ async def save_user(user_id):
     CURSOR.execute("INSERT OR IGNORE INTO users VALUES (?)", (user_id,))
     DB.commit()
 
-async def check_all_joined(user_id, context):
+async def check_all_joined(user_id, context, fj_list=CHANNELS_DATA):
     not_joined = []
-    for channel in CHANNELS_DATA:
+    for channel in fj_list:
         try:
             member = await context.bot.get_chat_member(chat_id=channel["id"], user_id=user_id)
             if member.status not in ['member', 'administrator', 'creator']:
@@ -114,9 +114,11 @@ async def check(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await update.message.reply_text("❌ এখনো সব চ্যানেলে join করা হয়নি!")
 
+# ================= BUTTON CALLBACK =================
 async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     user = query.from_user
+    
     if query.data == "check_status":
         not_joined_list = await check_all_joined(user.id, context)
         if not not_joined_list:
@@ -128,6 +130,27 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
         else:
             await query.answer("❌ এখনো সব চ্যানেলে join করা হয়নি!", show_alert=True)
+            
+    elif query.data.startswith("checkpost_"):
+        fj_ids_str = query.data.replace("checkpost_", "")
+        fj_ids = fj_ids_str.split(",") if fj_ids_str else []
+        
+        # Convert IDs to match CHANNELS_DATA
+        fj_list_to_check = []
+        for cid in fj_ids:
+            for c in CHANNELS_DATA:
+                if str(c['id']) == str(cid):
+                    fj_list_to_check.append(c)
+                    
+        not_joined = await check_all_joined(user.id, context, fj_list_to_check)
+        
+        if not not_joined:
+            await query.answer("✅ Verification Success!", show_alert=True)
+            await query.message.reply_text(f"🎬 **Video Link:** {WATCH_NOW_URL}")
+        else:
+            btns = [[InlineKeyboardButton(f"Join {c['name']}", url=c['link'])] for c in not_joined]
+            btns.append([InlineKeyboardButton("Check Again 🔄", callback_data=query.data)])
+            await query.message.reply_text("❌ Prothome nicher channel gulote join korun!", reply_markup=InlineKeyboardMarkup(btns))
 
 # ================= CHANNEL MANAGEMENT =================
 async def addchannel(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -181,7 +204,7 @@ async def skip_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def show_fj_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     selected = context.user_data['post_data']['fj']
-    buttons = [[InlineKeyboardButton(f"{'✅' if c['id'] in selected else '❌'} {c['name']}", callback_data=f"selfj_{c['id']}")] for c in CHANNELS_DATA]
+    buttons = [[InlineKeyboardButton(f"{'✅' if str(c['id']) in selected else '❌'} {c['name']}", callback_data=f"selfj_{c['id']}")] for c in CHANNELS_DATA]
     buttons.append([InlineKeyboardButton("Done ➡️", callback_data="fj_done")])
     text = "🔒 **Step 3:** Force Join Channels select korun:"
     if update.callback_query: await update.callback_query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(buttons))
@@ -191,16 +214,14 @@ async def show_fj_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def fj_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     if query.data == "fj_done": return await show_target_menu(update, context)
-    cid = query.data.replace("selfj_", "")
-    try: cid = int(cid)
-    except: pass
+    cid = str(query.data.replace("selfj_", ""))
     if cid in context.user_data['post_data']['fj']: context.user_data['post_data']['fj'].remove(cid)
     else: context.user_data['post_data']['fj'].append(cid)
     return await show_fj_menu(update, context)
 
 async def show_target_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     selected = context.user_data['post_data']['target']
-    buttons = [[InlineKeyboardButton(f"{'✅' if c['id'] in selected else '❌'} {c['name']}", callback_data=f"seltg_{c['id']}")] for c in CHANNELS_DATA]
+    buttons = [[InlineKeyboardButton(f"{'✅' if str(c['id']) in selected else '❌'} {c['name']}", callback_data=f"seltg_{c['id']}")] for c in CHANNELS_DATA]
     buttons.append([InlineKeyboardButton("Done ➡️", callback_data="tg_done")])
     await update.callback_query.edit_message_text("🎯 **Step 4:** Target Channels select korun:", reply_markup=InlineKeyboardMarkup(buttons))
     return POST_TARGET
@@ -210,9 +231,7 @@ async def target_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if query.data == "tg_done":
         await query.message.reply_text("🔗 **Step 5:** URL pathan ba /skip likhun:")
         return POST_URL
-    cid = query.data.replace("seltg_", "")
-    try: cid = int(cid)
-    except: pass
+    cid = str(query.data.replace("seltg_", ""))
     if cid in context.user_data['post_data']['target']: context.user_data['post_data']['target'].remove(cid)
     else: context.user_data['post_data']['target'].append(cid)
     return await show_target_menu(update, context)
@@ -236,9 +255,13 @@ async def confirm_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if query.data == "conf_cancel":
         await query.edit_message_text("❌ Cancelled.")
         return ConversationHandler.END
+    
     d = context.user_data['post_data']
-    final_url = d['url'] if d['url'] else WATCH_NOW_URL
-    kb = InlineKeyboardMarkup([[InlineKeyboardButton("Watch Now 🎬", url=final_url)]])
+    fj_ids = ",".join([str(x) for x in d['fj']])
+    
+    # Watch Now button logic: Callback used to verify FJ
+    kb = InlineKeyboardMarkup([[InlineKeyboardButton("Watch Now 🎬", callback_data=f"checkpost_{fj_ids}")]])
+    
     for tid in d['target']:
         try:
             if d['photo']: await context.bot.send_photo(chat_id=tid, photo=d['photo'], caption=d['title'], reply_markup=kb, parse_mode=ParseMode.HTML)
@@ -278,7 +301,7 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("addchannel", addchannel))
     app.add_handler(CommandHandler("removechannel", removechannel))
     app.add_handler(CommandHandler("listchannels", listchannels))
-    app.add_handler(CallbackQueryHandler(button_callback, pattern="^check_status$"))
+    app.add_handler(CallbackQueryHandler(button_callback))
 
     conv = ConversationHandler(
         entry_points=[CommandHandler("newpost", newpost), CommandHandler("broadcast", broadcast)],
@@ -294,5 +317,5 @@ if __name__ == "__main__":
         fallbacks=[CommandHandler("postcancel", postcancel)],
     )
     app.add_handler(conv)
-    print("Bot is running with full original features + updated wizard...")
+    print("Bot is running with full features and force join logic...")
     app.run_polling()
