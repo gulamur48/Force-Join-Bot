@@ -14,6 +14,7 @@ from telegram.ext import (
 class HealthCheckHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
+        self.send_header('Content-type', 'text/html')
         self.end_headers()
         self.wfile.write(b"Bot is running!")
 
@@ -130,20 +131,13 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
         else:
             await query.answer("❌ এখনো সব চ্যানেলে join করা হয়নি!", show_alert=True)
-            
-    elif query.data.startswith("checkpost_"):
-        fj_ids_str = query.data.replace("checkpost_", "")
+
+    elif query.data.startswith("cp_"):
+        fj_ids_str = query.data.replace("cp_", "")
         fj_ids = fj_ids_str.split(",") if fj_ids_str else []
+        fj_list_to_check = [c for c in CHANNELS_DATA if str(c['id']) in fj_ids]
         
-        # Convert IDs to match CHANNELS_DATA
-        fj_list_to_check = []
-        for cid in fj_ids:
-            for c in CHANNELS_DATA:
-                if str(c['id']) == str(cid):
-                    fj_list_to_check.append(c)
-                    
         not_joined = await check_all_joined(user.id, context, fj_list_to_check)
-        
         if not not_joined:
             await query.answer("✅ Verification Success!", show_alert=True)
             await query.message.reply_text(f"🎬 **Video Link:** {WATCH_NOW_URL}")
@@ -204,7 +198,7 @@ async def skip_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def show_fj_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     selected = context.user_data['post_data']['fj']
-    buttons = [[InlineKeyboardButton(f"{'✅' if str(c['id']) in selected else '❌'} {c['name']}", callback_data=f"selfj_{c['id']}")] for c in CHANNELS_DATA]
+    buttons = [[InlineKeyboardButton(f"{'✅' if str(c['id']) in selected else '❌'} {c['name']}", callback_data=f"sfj_{c['id']}")] for c in CHANNELS_DATA]
     buttons.append([InlineKeyboardButton("Done ➡️", callback_data="fj_done")])
     text = "🔒 **Step 3:** Force Join Channels select korun:"
     if update.callback_query: await update.callback_query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(buttons))
@@ -214,14 +208,14 @@ async def show_fj_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def fj_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     if query.data == "fj_done": return await show_target_menu(update, context)
-    cid = str(query.data.replace("selfj_", ""))
+    cid = str(query.data.replace("sfj_", ""))
     if cid in context.user_data['post_data']['fj']: context.user_data['post_data']['fj'].remove(cid)
     else: context.user_data['post_data']['fj'].append(cid)
     return await show_fj_menu(update, context)
 
 async def show_target_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     selected = context.user_data['post_data']['target']
-    buttons = [[InlineKeyboardButton(f"{'✅' if str(c['id']) in selected else '❌'} {c['name']}", callback_data=f"seltg_{c['id']}")] for c in CHANNELS_DATA]
+    buttons = [[InlineKeyboardButton(f"{'✅' if str(c['id']) in selected else '❌'} {c['name']}", callback_data=f"stg_{c['id']}")] for c in CHANNELS_DATA]
     buttons.append([InlineKeyboardButton("Done ➡️", callback_data="tg_done")])
     await update.callback_query.edit_message_text("🎯 **Step 4:** Target Channels select korun:", reply_markup=InlineKeyboardMarkup(buttons))
     return POST_TARGET
@@ -231,7 +225,7 @@ async def target_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if query.data == "tg_done":
         await query.message.reply_text("🔗 **Step 5:** URL pathan ba /skip likhun:")
         return POST_URL
-    cid = str(query.data.replace("seltg_", ""))
+    cid = str(query.data.replace("stg_", ""))
     if cid in context.user_data['post_data']['target']: context.user_data['post_data']['target'].remove(cid)
     else: context.user_data['post_data']['target'].append(cid)
     return await show_target_menu(update, context)
@@ -246,7 +240,7 @@ async def skip_url(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def show_summary(update: Update, context: ContextTypes.DEFAULT_TYPE):
     d = context.user_data['post_data']
     summary = f"📊 **Post Summary:**\n\n📝 Title: {d['title']}\n🖼 Photo: {'Setted' if d['photo'] else 'No'}\n🔒 FJ Channels: {len(d['fj'])}\n🎯 Targets: {len(d['target'])}\n🔗 URL: {d['url'] or 'Default'}"
-    kb = [[InlineKeyboardButton("✅ Confirm Send", callback_data="conf_send"), InlineKeyboardButton("❌ Cancel", callback_data="conf_cancel")]]
+    kb = [[InlineKeyboardButton("✅ Confirm Send", callback_data="csend"), InlineKeyboardButton("❌ Cancel", callback_data="conf_cancel")]]
     await update.message.reply_text(summary, reply_markup=InlineKeyboardMarkup(kb))
     return CONFIRM_SEND
 
@@ -255,25 +249,21 @@ async def confirm_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if query.data == "conf_cancel":
         await query.edit_message_text("❌ Cancelled.")
         return ConversationHandler.END
-    
     d = context.user_data['post_data']
     fj_ids = ",".join([str(x) for x in d['fj']])
-    
-    # Watch Now button logic: Callback used to verify FJ
-    kb = InlineKeyboardMarkup([[InlineKeyboardButton("Watch Now 🎬", callback_data=f"checkpost_{fj_ids}")]])
-    
+    kb = InlineKeyboardMarkup([[InlineKeyboardButton("Watch Now 🎬", callback_data=f"cp_{fj_ids}")]])
     for tid in d['target']:
         try:
             if d['photo']: await context.bot.send_photo(chat_id=tid, photo=d['photo'], caption=d['title'], reply_markup=kb, parse_mode=ParseMode.HTML)
             else: await context.bot.send_message(chat_id=tid, text=d['title'], reply_markup=kb, parse_mode=ParseMode.HTML)
         except: pass
-    await query.edit_message_text("✅ Post Sent Successfully!")
+    await query.edit_message_text("✅ Post Sent!")
     return ConversationHandler.END
 
 # ================= BROADCAST =================
 async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_admin(update.effective_user.id): return
-    await update.message.reply_text("📢 Broadcast mode active. Send message/photo/video to all users:")
+    await update.message.reply_text("📢 Broadcast mode active. Send message/photo/video:")
     return BROADCAST_MODE
 
 async def broadcast_send(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -308,14 +298,13 @@ if __name__ == "__main__":
         states={
             POST_TITLE: [MessageHandler(filters.TEXT & ~filters.COMMAND, post_title)],
             POST_PHOTO: [MessageHandler(filters.PHOTO, post_photo), CommandHandler("skip", skip_photo)],
-            POST_FORCE_JOIN: [CallbackQueryHandler(fj_callback, pattern="^selfj_|^fj_done$")],
-            POST_TARGET: [CallbackQueryHandler(target_callback, pattern="^seltg_|^tg_done$")],
+            POST_FJ: [CallbackQueryHandler(fj_callback, pattern="^sfj_|^fj_done$")],
+            POST_TARGET: [CallbackQueryHandler(tg_callback, pattern="^stg_|^tg_done$")],
             POST_URL: [MessageHandler(filters.TEXT & ~filters.COMMAND, post_url), CommandHandler("skip", skip_url)],
-            CONFIRM_SEND: [CallbackQueryHandler(confirm_handler, pattern="^conf_")],
+            CONFIRM_SEND: [CallbackQueryHandler(confirm_handler, pattern="^csend$|^conf_cancel$")],
             BROADCAST_MODE: [MessageHandler(filters.ALL & ~filters.COMMAND, broadcast_send)],
         },
         fallbacks=[CommandHandler("postcancel", postcancel)],
     )
     app.add_handler(conv)
-    print("Bot is running with full features and force join logic...")
     app.run_polling()
