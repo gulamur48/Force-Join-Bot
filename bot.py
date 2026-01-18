@@ -1,8 +1,8 @@
 """
 ================================================================================
-SUPREME GOD MODE BOT - ULTIMATE EDITION (BANGLADESH SPECIAL)
-VERSION: v11.0 (Viral Edition)
-AUTHOR: AI ASSISTANT
+সুপ্রিম গড মোড বট - আলটিমেট এডিশন (বাংলাদেশ স্পেশাল)
+ভার্সন: v১১.০ (ভাইরাল এডিশন)
+অথর: এআই অ্যাসিস্ট্যান্ট
 ================================================================================
 """
 
@@ -43,87 +43,75 @@ from telegram.ext import (
 )
 
 # ==============================================================================
-# ⚙️ CONFIGURATION CONSTANTS
+# ⚙️ কনফিগারেশন কনস্ট্যান্টস
 # ==============================================================================
 
 class Config:
-    # Bot Configuration
+    # বট কনফিগারেশন
     TOKEN = "8173181203:AAEDcda58agIZZic4uC8tSQVzKbrk6pYnU4"
     ADMIN_IDS = {6406804999}
     DB_NAME = "supreme_bot_v10.db"
     BACKUP_DIR = "backups"
     LOG_FILE = "bot_activity.log"
     
-    # System Constants
-    DEFAULT_AUTO_DELETE = 45  # seconds
+    # সিস্টেম কনস্ট্যান্টস
+    DEFAULT_AUTO_DELETE = 45  # সেকেন্ড
     MAX_MESSAGE_LENGTH = 4000
-    FLOOD_LIMIT = 3  # messages per second
-    SESSION_TIMEOUT = 300  # 5 minutes
+    FLOOD_LIMIT = 3  # প্রতি সেকেন্ডে মেসেজ
+    SESSION_TIMEOUT = 300  # 5 মিনিট
     
-    # Channel Settings
+    # চ্যানেল সেটিংস
     DEFAULT_CHANNELS = [
-        {"id": "@virallink259", "name": "Viral Link 2026 🔥", "link": "https://t.me/virallink259"},
-        {"id": -1002279183424, "name": "Premium Apps 💎", "link": "https://t.me/+5PNLgcRBC0IxYjll"},
-        {"id": "@virallink246", "name": "BD Beauty 🍑", "link": "https://t.me/virallink246"},
-        {"id": "@viralexpress1", "name": "FB Insta Links 🔗", "link": "https://t.me/viralexpress1"},
-        {"id": "@movietime467", "name": "Movie Time 🎬", "link": "https://t.me/movietime467"},
-        {"id": "@viralfacebook9", "name": "BD MMS Video 🔞", "link": "https://t.me/viralfacebook9"},
-        {"id": "@viralfb24", "name": "Deshi Bhabi 🔥", "link": "https://t.me/viralfb24"},
-        {"id": "@fbviral24", "name": "Kochi Meye 🎀", "link": "https://t.me/fbviral24"},
-        {"id": -1001550993047, "name": "Request Zone 📥", "link": "https://t.me/+WAOUc1rX6Qk3Zjhl"},
-        {"id": -1002011739504, "name": "Viral BD 🌍", "link": "https://t.me/+la630-IFwHAwYWVl"},
-        {"id": -1002444538806, "name": "AI Studio 🎨", "link": "https://t.me/+AHsGXIDzWmJlZjVl"}
+        {"id": "@virallink259", "name": "ভাইরাল লিংক ২০২৬ 🔥", "link": "https://t.me/virallink259"},
+        {"id": -1002279183424, "name": "প্রিমিয়াম অ্যাপস 💎", "link": "https://t.me/+5PNLgcRBC0IxYjll"},
+        {"id": "@virallink246", "name": "বিডি বিউটি 🍑", "link": "https://t.me/virallink246"},
+        {"id": "@viralexpress1", "name": "এফবি ইন্সটা লিংকস 🔗", "link": "https://t.me/viralexpress1"},
+        {"id": "@movietime467", "name": "মুভি টাইম 🎬", "link": "https://t.me/movietime467"},
+        {"id": "@viralfacebook9", "name": "বিডি এমএমএস ভিডিও 🔞", "link": "https://t.me/viralfacebook9"},
+        {"id": "@viralfb24", "name": "দেশি ভাবি 🔥", "link": "https://t.me/viralfb24"},
+        {"id": "@fbviral24", "name": "কোচি মেয়ে 🎀", "link": "https://t.me/fbviral24"},
+        {"id": -1001550993047, "name": "রিকোয়েস্ট জোন 📥", "link": "https://t.me/+WAOUc1rX6Qk3Zjhl"},
+        {"id": -1002011739504, "name": "ভাইরাল বিডি 🌍", "link": "https://t.me/+la630-IFwHAwYWVl"},
+        {"id": -1002444538806, "name": "এআই স্টুডিও 🎨", "link": "https://t.me/+AHsGXIDzWmJlZjVl"}
     ]
     
-    # Emoji Pack
+    # প্রিমিয়াম ইমোজি প্যাক (ইমোজিগুলো লেখার সাথে মিক্সড থাকবে)
     EMOJIS = {
-        "heart": "❤️",
-        "star": "⭐",
-        "fire": "🔥",
-        "lock": "🔒",
-        "unlock": "🔓",
-        "gear": "⚙️",
-        "bell": "🔔",
-        "chart": "📊",
-        "users": "👥",
-        "admin": "👑",
-        "camera": "📸",
-        "video": "🎬",
-        "link": "🔗",
-        "time": "⏰",
-        "check": "✅",
-        "cross": "❌",
-        "warn": "⚠️",
-        "info": "ℹ️",
-        "up": "⬆️",
-        "down": "⬇️",
-        "left": "⬅️",
-        "right": "➡️",
-        "refresh": "🔄",
-        "plus": "➕",
-        "minus": "➖",
-        "question": "❓",
-        "exclamation": "❗",
-        "money": "💰",
-        "gift": "🎁",
-        "crown": "👑",
-        "shield": "🛡️",
-        "rocket": "🚀",
-        "target": "🎯",
-        "megaphone": "📢",
-        "pencil": "✏️",
-        "trash": "🗑️",
-        "database": "💾",
-        "cloud": "☁️",
-        "sun": "☀️",
-        "moon": "🌙",
-        "earth": "🌍",
-        "kiss": "💋",
-        "eyes": "👀",
-        "love": "🥰"
+        "sparkle": "✨", "heart": "❤️", "fire": "🔥", "star": "⭐", "diamond": "💎",
+        "crown": "👑", "gem": "🔮", "gift": "🎁", "ribbon": "🎀", "butterfly": "🦋",
+        "fairy": "🧚‍♀️", "candy": "🍬", "cherry": "🍒", "flower": "🌸", "lollipop": "🍭",
+        "rabbit": "🐇", "peach": "🍑", "chocolate": "🍫", "icecream": "🍦", "cake": "🍰",
+        "donut": "🍩", "waffle": "🧇", "pancake": "🥞", "bacon": "🥓", "egg": "🍳",
+        "sun": "☀️", "rainbow": "🌈", "cloud": "☁️", "lightning": "⚡", "rocket": "🚀",
+        "target": "🎯", "lock": "🔒", "key": "🔑", "money": "💰", "magic": "🪄",
+        "eye": "👁️", "eyes": "👀", "kiss": "💋", "lips": "🫦", "heart_hands": "🫶",
+        "clock": "🕰️", "hourglass": "⏳", "bangladesh": "🇧🇩", "movie": "🎬", "camera": "🎥",
+        "hot": "🌶️", "new": "🆕", "infinity": "∞", "fast_forward": "⏩", "trophy": "🥇",
+        "peacock": "🦚", "evil_eye": "🧿", "drama": "🎭", "carousel": "🎠", "unicorn": "🦄",
+        "sparkles": "🎇", "fireworks": "🎆", "party": "🎉", "confetti": "🎊", "pinata": "🪅",
+        "circus": "🎪", "bubble": "🫧", "mango": "🥭", "rose": "🌹", "honey": "🍯",
+        "blueberry": "🫐", "tulip": "🌷", "strawberry": "🍓", "blossom": "🌼", "cookie": "🍪",
+        "heart_box": "💟", "watermelon": "🍉", "sunflower": "🌻", "lemon": "🍋", "avocado": "🥑",
+        "pineapple": "🍍", "broccoli": "🥦", "corn": "🌽", "potato": "🥔", "carrot": "🥕",
+        "check": "✅", "cross": "❌", "warning": "⚠️", "info": "ℹ️", "megaphone": "📢",
+        "users": "👥", "admin": "👑", "shield": "🛡️", "gear": "⚙️", "database": "💾",
+        "chart": "📊", "bell": "🔔", "link": "🔗", "time": "⏰", "calendar": "📅",
+        "up": "⬆️", "down": "⬇️", "left": "⬅️", "right": "➡️", "refresh": "🔄",
+        "plus": "➕", "minus": "➖", "question": "❓", "exclamation": "❗", "trash": "🗑️",
+        "cloud_storage": "☁️", "moon": "🌙", "earth": "🌍", "love_face": "🥰",
+        "prince": "🤴", "princess": "👸", "smile": "😊", "wink": "😉", "heart_eyes": "😍",
+        "cool": "😎", "kissing_heart": "😘", "flushed": "😳", "pleading": "🥺",
+        "partying": "🥳", "disguise": "🥸", "salute": "🫡", "melting": "🫠", "hearts": "💕",
+        "heart_grow": "💗", "heart_beat": "💓", "heart_sparkle": "💖", "heart_arrow": "💘",
+        "heart_ribbon": "💝", "broken_heart": "💔", "mending_heart": "❤️🩹", "orange_heart": "🧡",
+        "yellow_heart": "💛", "green_heart": "💚", "blue_heart": "💙", "purple_heart": "💜",
+        "brown_heart": "🤎", "black_heart": "🖤", "grey_heart": "🩶", "white_heart": "🤍",
+        "fire_heart": "❤️🔥", "pink_heart": "🩷", "light_blue_heart": "🩵",
+        "ok_hand": "👌", "clap": "👏", "muscle": "💪", "brain": "🧠", "lungs": "🫁",
+        "heart_lungs": "💘🫁", "sparkle_heart": "💖✨", "fire_eyes": "🔥👀"
     }
     
-    # Conversation States
+    # কনভারসেশন স্টেটস
     STATE_EDIT_CONFIG = 1
     STATE_POST_CAPTION = 2
     STATE_POST_MEDIA = 3
@@ -138,7 +126,7 @@ class Config:
     STATE_BACKUP_RESTORE = 12
 
 # ==============================================================================
-# 📝 ADVANCED LOGGING SYSTEM
+# 📝 অ্যাডভান্সড লগিং সিস্টেম
 # ==============================================================================
 
 class SupremeLogger:
@@ -172,7 +160,7 @@ class SupremeLogger:
         self.logger.setLevel(logging.DEBUG)
         
         self.logger.info("=" * 60)
-        self.logger.info("SUPREME GOD BOT v11.0 (BD EDITION) STARTING...")
+        self.logger.info("সুপ্রিম গড বট v১১.০ (বিডি এডিশন) শুরু হচ্ছে...")
         self.logger.info("=" * 60)
     
     def get_logger(self):
@@ -182,11 +170,11 @@ logger_instance = SupremeLogger()
 logger = logger_instance.get_logger()
 
 # ==============================================================================
-# 🗄️ ENTERPRISE DATABASE MANAGER
+# 🗄️ এন্টারপ্রাইজ ডাটাবেস ম্যানেজার
 # ==============================================================================
 
 class DatabaseManager:
-    """Advanced multi-threaded database manager with encryption and backup"""
+    """অ্যাডভান্সড মাল্টি-থ্রেডেড ডাটাবেস ম্যানেজার"""
     
     _instance = None
     _lock = threading.RLock()
@@ -341,54 +329,59 @@ class DatabaseManager:
         
         conn.commit()
         self.initialize_defaults()
-        logger.info("Database initialized successfully")
+        logger.info("ডাটাবেস ইনিশিয়ালাইজড")
     
     def initialize_defaults(self):
-        """Initialize default configuration with LONG, HOT messages"""
+        """ডিফল্ট কনফিগারেশন ইনিশিয়ালাইজেশন"""
         conn = self.get_connection()
         cursor = conn.cursor()
         
-        # Long, Hot, Flirty Bengali/English Mix Messages
-        welcome_msg_text = '''{fire} {heart} <b>OH MY GOD! WELCOME MY LOVE!</b> {heart} {fire}
+        # প্রিমিয়াম ইমোজি মিক্সড ওয়েলকাম মেসেজ
+        welcome_msg_text = '''✨🎀🦋🧚‍♀️💘👤হেই ডিয়ার ইউজারঃ {user_mention}🌟🍬🌸
 
-{kiss} <b>Shona Pakhi, Tumi eshe gecho? Ami tomar jonno ekhame wait korchilam!</b> {eyes}
+🫦🥰❤️‍🔥ওহ্ মাই গড! আমার লাভ! তুমি এসেছো!❤️‍🔥🥰🫦
 
-{star} <b>Tomake amader ai Hot & Premium Viral Community te Swagotom janachi!</b> Ekhane tumi pabe emon sob jinish ja tumi sara jibon khujecho! {star}
+👸🤴😘আমার সুইটহার্ট!😘🤴👸তুমি কি জানো আমি তোমার জন্য🕰️⏳কতটা উতলা হয়ে অপেক্ষা করছিলাম? আমার🎁🎀এক্সক্লুসিভ প্রিমিয়াম ভাইরাল ওয়ার্ল্ড🎀🎁এ তোমাকে হার্টফেল স্বাগতম!💝💖
 
-{crown} <b>EXCLUSIVE VIP SUVIDHA SUDHU TOMAR JONNO:</b>
-• {fire} **Super Hot Viral Videos:** Ja dekhe matha nosto hoye jabe!
-• {lock} **Premium Leaked Content:** Ekdom Uncut & Raw!
-• {bell} **Live Updates:** Sobar age sob notun update pabe ekhane!
-• {money} **Earning Tricks:** Taka kamanor gopon sohoj upay!
+💎🔮এখানে আছে এমন সব🥵হট🥵ও🔮রেয়ার🔮কনটেন্ট যা তোমার🌈কল্পনার🌈ও বাইরে!🍭🍫
 
-{love} <b>Amar Jan, tumi ki ready ashol moja neoyar jonno?</b> Deri koro na shona, nicher button e click kore ekhon i suru koro tomar jiboner sera adventure! {rocket}
+🔥👑ভিআইপি এক্সেস সুবিধা শুধু তোমার জন্য👑🔥
+•🌶️👀স্পাইসি ভাইরাল ভিডিও👀🌶️: দেখলে চোখ জুড়িয়ে যাবে!✨👁️✨
+•🔐🍖প্রিমিয়াম আনকাট ম্যাটেরিয়াল🍖🔐: একদম🆕ফ্রেশ🆕ও🥩র'🥩!
+•🚀⚡রিয়েল-টাইম আপডেট⚡🚀:🥇সবার🥇আগেই পাবে!⚡⚡
+•💸🪄গোপন ইনকাম ট্রিক্স🪄💸: টাকা কমানোর🎩ম্যাজিক🎩!💰💎
 
-{link} <b>Ekhon i Join koro ar enjoy koro unlimited fun!</b> 👇'''
+💋🫶আমার জান, তুমি কি🌌রেডি🌌অ্যাডভেঞ্চার শুরু করতে?⏩দেরি করো না⏩শোনা, নিচের🎯বাটনে🎯ক্লিক করো আর ঢুকো🌠এক্সাইটমেন্ট🌠এর দুনিয়ায়!🚀🌠
 
-        lock_msg_text = '''{lock} {warn} <b>OOPS BABY! ACCESS DENIED!</b> {warn} {lock}
+🫶👇এখনই জয়েন করো আর এঞ্জয়∞আনলিমিটেড ফান∞!👇🫶
 
-{cross} <b>Eki Shona? Tumi ekhono amader sob Channel e Join koro ni?</b> {cross}
+🕐🇧🇩বাংলাদেশ সময়🇧🇩🕐: {bd_time}📅⏰'''
+        
+        # প্রিমিয়াম ইমোজি মিক্সড লক মেসেজ
+        lock_msg_text = '''🔒⚠️🚫ওপিএস বেবি! অ্যাক্সেস ডিনাইড!🚫⚠️🔒
 
-{eyes} **Ami tomake eto valobashi ar tumi amake support korbe na?** Amar sob hot video ar premium content dekhar jonno tomake obossoi nicher sob gulo channel e join korte hobe! {fire}
+❌😥একি শোনা? তুমি এখনো আমাদের সব চ্যানেলে জয়েন করো নি?❌😥
 
-{heart} <b>Please Jan, amar kotha rakho!</b> Nicher deoya prottekta channel e ekti ekti kore click koro ar Join koro. Tarpor "✅ Verify" button e click koro, ami tomake sora sori vitore niye jabo! {kiss}
+👀💔আমি তোমায় এতো ভালোবাসি আর তুমি আমায় সাপোর্ট করবে না?👀💔আমার সব🥵হট ভিডিও🥵ও💎প্রিমিয়াম কনটেন্ট💎দেখার জন্য তোমাকে অবশ্যই নিচের সব গুলো চ্যানেলে জয়েন করতে হবে!🔥
 
-{down} **Nicher Button gulo te click kore Join kore nao joldi!** {down}'''
+❤️😘প্লিজ জান, আমার কথা রাখো!❤️😘নিচের দেওয়া প্রত্যেকটা চ্যানেলে এক্টি এক্টি করে ক্লিক করো আর জয়েন করো। তারপর"✅ভেরিফাই"বাটনে ক্লিক করো, আমি তোমায় সরাসরি ভিতরে নিয়ে যাব!💋
 
+👇🔗নিচের বাটন গুলোতে ক্লিক করে জয়েন করো এখনই!🔗👇'''
+        
         defaults = [
-            ('welcome_msg', welcome_msg_text, 0, 'messages', 'Welcome message for new users'),
-            ('lock_msg', lock_msg_text, 0, 'messages', 'Message shown when user hasn\'t joined channels'),
-            ('welcome_photo', 'https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead', 0, 'media', 'Welcome photo URL'),
-            ('watch_url', 'https://mmshotbd.blogspot.com/?m=1', 0, 'links', 'Main watch URL'),
-            ('btn_text', '{video} FULL VIDEO DEKHUN EKHANE {fire}', 0, 'buttons', 'Button text'),
-            ('auto_delete', '45', 0, 'settings', 'Auto delete timer in seconds'),
-            ('maint_mode', 'OFF', 0, 'security', 'Maintenance mode status'),
-            ('force_join', 'ON', 0, 'security', 'Force join channels'),
-            ('max_users_per_day', '1000', 0, 'limits', 'Maximum users per day'),
-            ('vip_access_level', '2', 0, 'vip', 'VIP access level required'),
-            ('backup_interval', '86400', 0, 'system', 'Backup interval in seconds'),
-            ('flood_threshold', '5', 0, 'security', 'Flood threshold messages per minute'),
-            ('session_timeout', '300', 0, 'security', 'Session timeout in seconds')
+            ('welcome_msg', welcome_msg_text, 0, 'messages', 'নতুন ইউজারের জন্য ওয়েলকাম মেসেজ'),
+            ('lock_msg', lock_msg_text, 0, 'messages', 'চ্যানেল জয়েন না করলে লক মেসেজ'),
+            ('welcome_photo', 'https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead', 0, 'media', 'ওয়েলকাম ফটো URL'),
+            ('watch_url', 'https://mmshotbd.blogspot.com/?m=1', 0, 'links', 'প্রধান ওয়াচ URL'),
+            ('btn_text', '🎬🎥🔥ফুল ভিডিও দেখুন এখানে🔥🎥🎬', 0, 'buttons', 'বাটন টেক্সট'),
+            ('auto_delete', '45', 0, 'settings', 'অটো ডিলিট টাইমার সেকেন্ডে'),
+            ('maint_mode', 'OFF', 0, 'security', 'মেইনটেনেন্স মোড স্ট্যাটাস'),
+            ('force_join', 'ON', 0, 'security', 'ফোর্স জয়েন চ্যানেল'),
+            ('max_users_per_day', '1000', 0, 'limits', 'প্রতিদিন সর্বোচ্চ ইউজার'),
+            ('vip_access_level', '2', 0, 'vip', 'ভিআইপি অ্যাক্সেস লেভেল'),
+            ('backup_interval', '86400', 0, 'system', 'ব্যাকআপ ইন্টারভাল সেকেন্ডে'),
+            ('flood_threshold', '5', 0, 'security', 'ফ্লাড থ্রেশহোল্ড প্রতি মিনিটে'),
+            ('session_timeout', '300', 0, 'security', 'সেশন টাইমআউট সেকেন্ডে')
         ]
         
         for key, value, encrypted, category, description in defaults:
@@ -407,7 +400,7 @@ class DatabaseManager:
         
         conn.commit()
     
-    # === User Management ===
+    # === ইউজার ম্যানেজমেন্ট ===
     def add_user(self, user_id: int, username: str, first_name: str, last_name: str = ""):
         conn = self.get_connection()
         cursor = conn.cursor()
@@ -429,7 +422,7 @@ class DatabaseManager:
             conn.commit()
             return True
         except Exception as e:
-            logger.error(f"Error adding user {user_id}: {e}")
+            logger.error(f"ইউজার অ্যাড করার ত্রুটি {user_id}: {e}")
             conn.rollback()
             return False
     
@@ -445,7 +438,7 @@ class DatabaseManager:
             ''', (user_id,))
             conn.commit()
         except Exception as e:
-            logger.error(f"Error updating activity for {user_id}: {e}")
+            logger.error(f"ইউজার অ্যাক্টিভিটি আপডেট ত্রুটি {user_id}: {e}")
     
     def get_user(self, user_id: int):
         conn = self.get_connection()
@@ -478,11 +471,11 @@ class DatabaseManager:
             cursor.execute('''
                 INSERT INTO activity_logs (user_id, action, details)
                 VALUES (?, ?, ?)
-            ''', (admin_id, 'block_user', f'Blocked {user_id}: {reason}'))
+            ''', (admin_id, 'block_user', f'ব্লক করা হয়েছে {user_id}: {reason}'))
             conn.commit()
             return True
         except Exception as e:
-            logger.error(f"Error blocking user {user_id}: {e}")
+            logger.error(f"ইউজার ব্লক করার ত্রুটি {user_id}: {e}")
             return False
     
     def unblock_user(self, user_id: int, admin_id: int):
@@ -493,14 +486,14 @@ class DatabaseManager:
             cursor.execute('''
                 INSERT INTO activity_logs (user_id, action, details)
                 VALUES (?, ?, ?)
-            ''', (admin_id, 'unblock_user', f'Unblocked {user_id}'))
+            ''', (admin_id, 'unblock_user', f'আনব্লক করা হয়েছে {user_id}'))
             conn.commit()
             return True
         except Exception as e:
-            logger.error(f"Error unblocking user {user_id}: {e}")
+            logger.error(f"ইউজার আনব্লক করার ত্রুটি {user_id}: {e}")
             return False
     
-    # === Statistics ===
+    # === স্ট্যাটিস্টিক্স ===
     def get_stats(self):
         conn = self.get_connection()
         cursor = conn.cursor()
@@ -534,17 +527,14 @@ class DatabaseManager:
         stats['active_today'] = cursor.fetchone()[0]
         return stats
     
-    # === Configuration Management ===
+    # === কনফিগারেশন ম্যানেজমেন্ট ===
     def get_config(self, key: str, default: str = ""):
         conn = self.get_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT value FROM config WHERE key = ?", (key,))
         result = cursor.fetchone()
         if result:
-            value = result[0]
-            for emoji_key, emoji in Config.EMOJIS.items():
-                value = value.replace(f"{{{emoji_key}}}", emoji)
-            return value
+            return result[0]
         return default
     
     def set_config(self, key: str, value: str, encrypted: bool = False, category: str = "general"):
@@ -558,10 +548,10 @@ class DatabaseManager:
             conn.commit()
             return True
         except Exception as e:
-            logger.error(f"Error setting config {key}: {e}")
+            logger.error(f"কনফিগ সেট করার ত্রুটি {key}: {e}")
             return False
     
-    # === Channel Management ===
+    # === চ্যানেল ম্যানেজমেন্ট ===
     def get_channels(self, force_join_only: bool = False):
         conn = self.get_connection()
         cursor = conn.cursor()
@@ -601,7 +591,7 @@ class DatabaseManager:
             conn.commit()
             return True
         except Exception as e:
-            logger.error(f"Error adding channel {channel_id}: {e}")
+            logger.error(f"চ্যানেল অ্যাড করার ত্রুটি {channel_id}: {e}")
             return False
     
     def remove_channel(self, channel_id: str):
@@ -612,10 +602,10 @@ class DatabaseManager:
             conn.commit()
             return True
         except Exception as e:
-            logger.error(f"Error removing channel {channel_id}: {e}")
+            logger.error(f"চ্যানেল রিমুভ করার ত্রুটি {channel_id}: {e}")
             return False
     
-    # === VIP & Session & Backup ===
+    # === ভিআইপি ও সেশন ম্যানেজমেন্ট ===
     def add_vip(self, user_id: int, level: int = 1, expires_at: str = None):
         conn = self.get_connection()
         cursor = conn.cursor()
@@ -628,7 +618,7 @@ class DatabaseManager:
             conn.commit()
             return True
         except Exception as e:
-            logger.error(f"Error adding VIP {user_id}: {e}")
+            logger.error(f"ভিআইপি অ্যাড করার ত্রুটি {user_id}: {e}")
             return False
     
     def remove_vip(self, user_id: int):
@@ -640,7 +630,7 @@ class DatabaseManager:
             conn.commit()
             return True
         except Exception as e:
-            logger.error(f"Error removing VIP {user_id}: {e}")
+            logger.error(f"ভিআইপি রিমুভ করার ত্রুটি {user_id}: {e}")
             return False
     
     def is_vip(self, user_id: int):
@@ -663,7 +653,7 @@ class DatabaseManager:
             conn.commit()
             return session_id
         except Exception as e:
-            logger.error(f"Error creating session: {e}")
+            logger.error(f"সেশন ক্রিয়েট করার ত্রুটি: {e}")
             return None
     
     def get_session(self, session_id: str):
@@ -697,7 +687,7 @@ class DatabaseManager:
             with self.get_connection() as source:
                 source.backup(backup_conn)
             backup_conn.close()
-            logger.info(f"Backup created: {backup_file}")
+            logger.info(f"ব্যাকআপ তৈরি হয়েছে: {backup_file}")
             backups = sorted([
                 f for f in os.listdir(self.backup_dir)
                 if f.startswith('backup_') and f.endswith('.db')
@@ -707,7 +697,7 @@ class DatabaseManager:
                     os.remove(os.path.join(self.backup_dir, old_backup))
             return backup_file
         except Exception as e:
-            logger.error(f"Error creating backup: {e}")
+            logger.error(f"ব্যাকআপ তৈরি করার ত্রুটি: {e}")
             return None
     
     def check_flood(self, user_id: int):
@@ -762,7 +752,7 @@ class DatabaseManager:
 db = DatabaseManager()
 
 # ==============================================================================
-# 🔧 SYSTEM MONITOR
+# 🔧 সিস্টেম মনিটর
 # ==============================================================================
 
 class SystemMonitor:
@@ -780,7 +770,7 @@ class SystemMonitor:
         uptime %= 3600
         minutes = uptime // 60
         seconds = uptime % 60
-        return f"{int(days)}d {int(hours)}h {int(minutes)}m {int(seconds)}s"
+        return f"{int(days)}দিন {int(hours)}ঘণ্টা {int(minutes)}মিনিট {int(seconds)}সেকেন্ড"
     
     def get_system_stats(self):
         stats = {
@@ -814,7 +804,7 @@ class SystemMonitor:
 system_monitor = SystemMonitor()
 
 # ==============================================================================
-# 🌐 HEALTH SERVER
+# 🌐 হেলথ সার্ভার
 # ==============================================================================
 
 class HealthCheckHandler(BaseHTTPRequestHandler):
@@ -827,7 +817,7 @@ class HealthCheckHandler(BaseHTTPRequestHandler):
                 'timestamp': datetime.datetime.now().isoformat(),
                 'system': stats,
                 'database': db_stats,
-                'version': 'v11.0'
+                'version': 'v১১.০'
             }
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')
@@ -837,7 +827,7 @@ class HealthCheckHandler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header('Content-Type', 'text/html')
             self.end_headers()
-            self.wfile.write(b"<h1>Supreme Bot Running (BD Timezone)</h1>")
+            self.wfile.write(b"<h1>সুপ্রিম বট চলছে (বাংলাদেশ টাইমজোন)</h1>")
     
     def log_message(self, format, *args):
         logger.debug(f"HTTP {args[0]} {args[1]}")
@@ -848,33 +838,32 @@ def run_health_server():
         server = HTTPServer(('0.0.0.0', port), HealthCheckHandler)
         server.serve_forever()
     except Exception as e:
-        logger.error(f"Failed to start health server: {e}")
+        logger.error(f"হেলথ সার্ভার শুরু করতে ব্যর্থ: {e}")
 
 server_thread = threading.Thread(target=run_health_server, daemon=True)
 server_thread.start()
 
 # ==============================================================================
-# 🎨 UI MANAGER WITH BD TIME & USER MENTION
+# 🎨 ইউআই ম্যানেজার (বাংলাদেশ টাইম ও ইউজার মেনশন সহ)
 # ==============================================================================
 
 class UIManager:
     @staticmethod
-    def format_text(text: str, user=None, emojis: bool = True):
-        """Format text with user info, emojis and BD Time"""
-        # Replace emoji placeholders
-        if emojis:
-            for key, emoji in Config.EMOJIS.items():
-                text = text.replace(f"{{{key}}}", emoji)
-        
-        # Add user info if provided (PROMINENT MENTION)
-        if user:
-            user_info = f"\n\n👤 <b>Hey Dear User:</b> {mention_html(user.id, user.first_name or 'My Love')}"
-            text += user_info
-        
-        # Add timestamp (BANGLADESH TIME UTC+6)
+    def format_text(text: str, user=None):
+        """ইউজার ইনফো, ইমোজি ও বাংলাদেশ টাইম সহ টেক্সট ফরম্যাট"""
+        # বাংলাদেশ টাইম (UTC+6)
         bd_time = datetime.datetime.utcnow() + datetime.timedelta(hours=6)
-        timestamp = bd_time.strftime("%d %b %Y, %I:%M %p (BD)")
-        text += f"\n⏰ <b>BD Time:</b> {timestamp}"
+        bd_time_str = bd_time.strftime("%d %b %Y, %I:%M %p (BD)")
+        
+        # টেক্সটে বাংলাদেশ টাইম যুক্ত করুন
+        text = text.replace("{bd_time}", bd_time_str)
+        
+        # ইউজার মেনশন যুক্ত করুন
+        if user:
+            user_mention = mention_html(user.id, user.first_name or 'আমার লাভ')
+            text = text.replace("{user_mention}", user_mention)
+        else:
+            text = text.replace("{user_mention}", "")
         
         return text
     
@@ -886,7 +875,7 @@ class UIManager:
             for btn in row:
                 row_buttons.append(
                     InlineKeyboardButton(
-                        text=UIManager.format_text(btn.get('text', ''), emojis=True),
+                        text=btn.get('text', ''),
                         callback_data=btn.get('callback', ''),
                         url=btn.get('url', None)
                     )
@@ -895,11 +884,11 @@ class UIManager:
         
         if add_back:
             keyboard.append([
-                InlineKeyboardButton("🔙 Back to Main", callback_data="main_menu")
+                InlineKeyboardButton("🔙 মেইন মেনুতে ফিরুন", callback_data="main_menu")
             ])
         if add_close:
             keyboard.append([
-                InlineKeyboardButton("❌ Close Panel", callback_data="close_panel")
+                InlineKeyboardButton("❌ প্যানেল বন্ধ করুন", callback_data="close_panel")
             ])
         
         return InlineKeyboardMarkup(keyboard)
@@ -908,20 +897,20 @@ class UIManager:
     def get_admin_menu():
         buttons = [
             [
-                {"text": "📝 Message Editor", "callback": "menu_messages"},
-                {"text": "🔗 Link Settings", "callback": "menu_links"}
+                {"text": "📝 মেসেজ এডিটর", "callback": "menu_messages"},
+                {"text": "🔗 লিংক সেটিংস", "callback": "menu_links"}
             ],
             [
-                {"text": "📢 Channel Manager", "callback": "menu_channels"},
-                {"text": "🛡️ Security Panel", "callback": "menu_security"}
+                {"text": "📢 চ্যানেল ম্যানেজার", "callback": "menu_channels"},
+                {"text": "🛡️ সিকিউরিটি প্যানেল", "callback": "menu_security"}
             ],
             [
-                {"text": "📡 Marketing Tools", "callback": "menu_marketing"},
-                {"text": "📊 Statistics", "callback": "menu_stats"}
+                {"text": "📡 মার্কেটিং টুলস", "callback": "menu_marketing"},
+                {"text": "📊 স্ট্যাটিস্টিক্স", "callback": "menu_stats"}
             ],
             [
-                {"text": "👑 VIP Management", "callback": "menu_vip"},
-                {"text": "⚙️ System Settings", "callback": "menu_system"}
+                {"text": "👑 ভিআইপি ম্যানেজমেন্ট", "callback": "menu_vip"},
+                {"text": "⚙️ সিস্টেম সেটিংস", "callback": "menu_system"}
             ]
         ]
         return UIManager.create_keyboard(buttons, add_back=False, add_close=True)
@@ -929,28 +918,28 @@ class UIManager:
     @staticmethod
     def get_stats_display(stats: Dict):
         text = f"""
-{Config.EMOJIS['chart']} <b>SYSTEM STATISTICS (LIVE)</b>
+{Config.EMOJIS['chart']} <b>সিস্টেম স্ট্যাটিস্টিক্স (লাইভ)</b>
 
-{Config.EMOJIS['users']} <b>User Stats:</b>
-• Total Users: {stats.get('total_users', 0):,}
-• Today New: {stats.get('today_users', 0):,}
-• VIP Users: {stats.get('vip_users', 0):,}
-• Blocked: {stats.get('blocked_users', 0):,}
-• Active Today: {stats.get('active_today', 0):,}
+{Config.EMOJIS['users']} <b>ইউজার স্ট্যাটস:</b>
+• মোট ইউজার: {stats.get('total_users', 0):,}
+• আজ নতুন: {stats.get('today_users', 0):,}
+• ভিআইপি ইউজার: {stats.get('vip_users', 0):,}
+• ব্লকড: {stats.get('blocked_users', 0):,}
+• আজ অ্যাক্টিভ: {stats.get('active_today', 0):,}
 
-{Config.EMOJIS['megaphone']} <b>Channel Stats:</b>
-• Active Channels: {stats.get('active_channels', 0):,}
+{Config.EMOJIS['megaphone']} <b>চ্যানেল স্ট্যাটস:</b>
+• অ্যাক্টিভ চ্যানেল: {stats.get('active_channels', 0):,}
 
-{Config.EMOJIS['camera']} <b>Post Stats:</b>
-• Total Posts: {stats.get('total_posts', 0):,}
-• Today Posts: {stats.get('today_posts', 0):,}
+{Config.EMOJIS['camera']} <b>পোস্ট স্ট্যাটস:</b>
+• মোট পোস্ট: {stats.get('total_posts', 0):,}
+• আজকের পোস্ট: {stats.get('today_posts', 0):,}
 """
         return text
 
 ui = UIManager()
 
 # ==============================================================================
-# 🔐 SECURITY MANAGER
+# 🔐 সিকিউরিটি ম্যানেজার (পপআপ ভেরিফিকেশন সহ)
 # ==============================================================================
 
 class SecurityManager:
@@ -981,7 +970,7 @@ class SecurityManager:
                 if member.status in ['left', 'kicked']:
                     missing_channels.append(channel)
             except Exception as e:
-                logger.warning(f"Failed to check channel {channel['id']}: {e}")
+                logger.warning(f"চ্যানেল চেক করতে ব্যর্থ {channel['id']}: {e}")
                 missing_channels.append(channel)
         
         self.verification_cache[cache_key] = (time.time(), missing_channels)
@@ -998,7 +987,7 @@ class SecurityManager:
 security = SecurityManager()
 
 # ==============================================================================
-# 🔄 BACKGROUND TASKS
+# 🔄 ব্যাকগ্রাউন্ড টাস্কস
 # ==============================================================================
 
 class BackgroundTaskManager:
@@ -1020,7 +1009,7 @@ class BackgroundTaskManager:
             try:
                 func(*args, **kwargs)
             except Exception as e:
-                logger.error(f"Background task error: {e}")
+                logger.error(f"ব্যাকগ্রাউন্ড টাস্ক ত্রুটি: {e}")
             time.sleep(interval)
     
     def cleanup(self):
@@ -1040,11 +1029,11 @@ task_manager.add_task(cleanup_expired_sessions, 300)
 task_manager.add_task(create_automatic_backup, 3600)
 
 # ==============================================================================
-# 🎮 COMMAND HANDLERS
+# 🎮 কমান্ড হ্যান্ডলারস (ইমোজি মিক্সড হট মেসেজ সহ)
 # ==============================================================================
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Handle /start command with Viral/Hot Message Logic"""
+    """ইমোজি মিক্সড হট মেসেজ লজিক সহ /start কমান্ড হ্যান্ডল"""
     user = update.effective_user
     system_monitor.update_user_activity(user.id)
     system_monitor.increment_message()
@@ -1052,32 +1041,33 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     db.add_user(user.id, user.username, user.first_name, user.last_name or "")
     
     if security.check_flood(user.id):
-        await update.message.reply_text("⚠️ <b>Slow down baby! Too fast!</b>", parse_mode=ParseMode.HTML)
+        await update.message.reply_text("⚠️ <b>ধীরে বেবি! খুব দ্রুত!</b>", parse_mode=ParseMode.HTML)
         return
     
     if security.check_maintenance(user.id):
         await update.message.reply_text(
-            ui.format_text("🔧 <b>System Maintenance Mode is ON!</b>\nWe are upgrading the system for more hot features.", user),
+            ui.format_text("🔧 <b>সিস্টেম মেইনটেনেন্স মোড চালু!</b>\nআমরা আরো হট ফিচারের জন্য সিস্টেম আপগ্রেড করছি।", user),
             parse_mode=ParseMode.HTML
         )
         return
     
     user_data = db.get_user(user.id)
     if user_data and user_data.get('is_blocked'):
-        await update.message.reply_text("🚫 <b>You are BLOCKED!</b> Contact Admin.", parse_mode=ParseMode.HTML)
+        await update.message.reply_text("🚫 <b>আপনি ব্লকড!</b> অ্যাডমিনের সাথে যোগাযোগ করুন।", parse_mode=ParseMode.HTML)
         return
     
     missing_channels = await security.check_membership(user.id, context.bot)
     
     if missing_channels:
+        # লক মেসেজ প্রিমিয়াম ইমোজি মিক্সড
         lock_msg = db.get_config('lock_msg')
         buttons = []
         for channel in missing_channels:
             buttons.append([
-                {"text": f"📢 Join {channel['name']}", "url": channel['link']}
+                {"text": f"📢 {channel['name']} এ জয়েন করুন", "url": channel['link']}
             ])
         buttons.append([
-            {"text": "✅ Verify Membership", "callback": "verify_membership"}
+            {"text": "✅ ভেরিফাই মেম্বারশিপ", "callback": "verify_membership"}
         ])
         
         keyboard = ui.create_keyboard(buttons, add_back=False, add_close=False)
@@ -1095,6 +1085,7 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 parse_mode=ParseMode.HTML
             )
     else:
+        # ওয়েলকাম মেসেজ প্রিমিয়াম ইমোজি মিক্সড
         welcome_msg = db.get_config('welcome_msg')
         btn_text = db.get_config('btn_text')
         watch_url = db.get_config('watch_url')
@@ -1126,21 +1117,21 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
 
 async def admin_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Handle /admin command"""
+    """এডমিন কমান্ড হ্যান্ডল"""
     user = update.effective_user
     if user.id not in Config.ADMIN_IDS:
         return
     
     text = f"""
-{Config.EMOJIS['admin']} <b>SUPREME GOD ADMIN PANEL</b>
+{Config.EMOJIS['admin']} <b>সুপ্রিম গড এডমিন প্যানেল</b>
 
-{Config.EMOJIS['fire']} <b>Welcome Boss! Here is your Empire Status:</b>
+{Config.EMOJIS['fire']} <b>স্বাগতম বস! এখানে আপনার সাম্রাজ্যের স্ট্যাটাস:</b>
 
-{Config.EMOJIS['chart']} <b>Bot Statistics:</b>
-• Total Users: {db.get_stats()['total_users']:,}
-• Active Today: {db.get_stats()['active_today']:,}
+{Config.EMOJIS['chart']} <b>বট স্ট্যাটিস্টিক্স:</b>
+• মোট ইউজার: {db.get_stats()['total_users']:,}
+• আজ অ্যাক্টিভ: {db.get_stats()['active_today']:,}
 
-👇 <b>Select an option from the menu below:</b>
+👇 <b>নিচের মেনু থেকে একটি অপশন সিলেক্ট করুন:</b>
 """
     await update.message.reply_text(
         ui.format_text(text, user),
@@ -1155,7 +1146,7 @@ async def stats_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     stats = db.get_stats()
     sys_stats = system_monitor.get_system_stats()
     text = ui.get_stats_display(stats)
-    text += f"\n{Config.EMOJIS['gear']} <b>Server Load:</b> CPU {sys_stats['cpu_percent']}% | RAM {sys_stats['memory_percent']}%"
+    text += f"\n{Config.EMOJIS['gear']} <b>সার্ভার লোড:</b> CPU {sys_stats['cpu_percent']}% | RAM {sys_stats['memory_percent']}%"
     
     await update.message.reply_text(
         ui.format_text(text, user),
@@ -1166,16 +1157,16 @@ async def stats_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     text = f"""
-{Config.EMOJIS['info']} <b>Help & Support Center</b>
+{Config.EMOJIS['info']} <b>হেল্প অ্যান্ড সাপোর্ট সেন্টার</b>
 
-<b>Dear User,</b>
-If you are facing issues, try to restart the bot using /start.
-Make sure you joined all our channels!
+<b>প্রিয় ইউজার,</b>
+যদি আপনি সমস্যার সম্মুখীন হন, /start ব্যবহার করে বট রিস্টার্ট করার চেষ্টা করুন।
+নিশ্চিত করুন আপনি আমাদের সব চ্যানেলে জয়েন করেছেন!
 
-<b>Admin Commands:</b>
-/admin - Open Control Panel
-/stats - Live Stats
-/backup - Force Backup
+<b>এডমিন কমান্ডস:</b>
+/admin - কন্ট্রোল প্যানেল খুলুন
+/stats - লাইভ স্ট্যাটস
+/backup - ফোর্স ব্যাকআপ
 """
     await update.message.reply_text(ui.format_text(text, user), parse_mode=ParseMode.HTML)
 
@@ -1183,15 +1174,15 @@ async def backup_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     if user.id not in Config.ADMIN_IDS: return
     
-    msg = await update.message.reply_text("💾 <b>Backing up Database...</b>", parse_mode=ParseMode.HTML)
+    msg = await update.message.reply_text("💾 <b>ডাটাবেস ব্যাকআপ হচ্ছে...</b>", parse_mode=ParseMode.HTML)
     backup_file = db.create_backup()
     if backup_file:
-        await msg.edit_text(f"✅ <b>Backup Successful!</b>\nFilename: {os.path.basename(backup_file)}", parse_mode=ParseMode.HTML)
+        await msg.edit_text(f"✅ <b>ব্যাকআপ সফল!</b>\nফাইলনাম: {os.path.basename(backup_file)}", parse_mode=ParseMode.HTML)
     else:
-        await msg.edit_text("❌ <b>Backup Failed!</b> Check logs.", parse_mode=ParseMode.HTML)
+        await msg.edit_text("❌ <b>ব্যাকআপ ব্যর্থ!</b> লগ চেক করুন।", parse_mode=ParseMode.HTML)
 
 # ==============================================================================
-# 🔄 CALLBACK QUERY HANDLER (AUTO-DELETE & NAVIGATION)
+# 🔄 কলব্যাক কুয়েরি হ্যান্ডলার (অটো-ডিলিট ও পপআপ ভেরিফিকেশন)
 # ==============================================================================
 
 async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -1201,15 +1192,21 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     system_monitor.update_user_activity(user.id)
     
     # -----------------------------------------------------------
-    # SPECIAL POP-UP LOGIC FOR VERIFY BUTTON
+    # ভেরিফাই বাটনের জন্য বিশেষ পপআপ লজিক
     # -----------------------------------------------------------
     if data == "verify_membership":
         missing_channels = await security.check_membership(user.id, context.bot)
         if not missing_channels:
-            # SHOW SUCCESS POPUP
-            await query.answer("✅ WOW! Verification Successful Baby! ❤️\nAccess Granted! Enjoy...", show_alert=True)
+            # ✅ সফল ভেরিফিকেশন পপআপ
+            await query.answer(
+                "🎉🎊✅ ওয়াও! ভেরিফিকেশন সফল হয়েছে বেবি! ❤️\n\n"
+                "🌟✨ তোমাকে স্বাগতম আমাদের প্রিমিয়াম কমিউনিটিতে! 🎀💎\n"
+                "এখন তুমি আনলিমিটেড এক্সেস পেয়েছো সব হট কনটেন্টে! 🔥🥵\n\n"
+                "💋🫶 এঞ্জয় করো সারা জীবন মনে থাকবে এমন এক্সপেরিয়েন্স! 🚀🌠",
+                show_alert=True
+            )
             
-            # Replace Lock Message with Welcome Message (Auto-delete effect)
+            # ওয়েলকাম মেসেজ দিয়ে লক মেসেজ রিপ্লেস করুন
             welcome_msg = db.get_config('welcome_msg')
             btn_text = db.get_config('btn_text')
             watch_url = db.get_config('watch_url')
@@ -1222,27 +1219,33 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     parse_mode=ParseMode.HTML
                 )
             except:
-                # If original was text only
+                # যদি অরিজিনাল টেক্সট হয়
                 await query.message.edit_text(
                     ui.format_text(welcome_msg, user),
                     reply_markup=keyboard,
                     parse_mode=ParseMode.HTML
                 )
         else:
-            # SHOW FAILURE POPUP
-            await query.answer("❌ OOPS! Access Denied! 🥺\nPlease join ALL channels first then click Verify!", show_alert=True)
+            # ❌ ফেইল ভেরিফিকেশন পপআপ
+            await query.answer(
+                "❌😥 ওপিএস! ভেরিফিকেশন ব্যর্থ! 🥺\n\n"
+                "⚠️🚫 তুমি এখনো সব চ্যানেলে জয়েন করো নি! \n"
+                "দয়া করে নিচের সবগুলো চ্যানেলে জয়েন করে তারপর আবার ভেরিফাই চেষ্টা করো! 🔗👇\n\n"
+                "💋❤️ আমার কথা রাখো বেবি, আমি তোমার জন্য অপেক্ষা করছি! ⏳🕰️",
+                show_alert=True
+            )
         return
 
-    # Normal Callback Handling
+    # নরমাল কলব্যাক হ্যান্ডলিং
     await query.answer()
 
-    # Admin check
+    # এডমিন চেক
     admin_functions = {'main_menu', 'menu_', 'edit_', 'toggle_', 'remove_', 'add_', 'broadcast', 'create_post', 'block_', 'unblock_', 'add_vip', 'backup_'}
     if any(data.startswith(func) for func in admin_functions) and user.id not in Config.ADMIN_IDS:
-        await query.answer("🚫 Admin Access Only!", show_alert=True)
+        await query.answer("🚫 শুধুমাত্র এডমিন অ্যাক্সেস!", show_alert=True)
         return
 
-    # Navigation Logic - Uses edit_message_text to "delete" previous state
+    # নেভিগেশন লজিক
     if data == "main_menu":
         await show_admin_panel(query.message, user)
     
@@ -1254,62 +1257,62 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     elif data == "menu_messages":
         buttons = [[
-            {"text": "✏️ Welcome Msg", "callback": "edit_welcome_msg"},
-            {"text": "✏️ Lock Msg", "callback": "edit_lock_msg"}
-        ], [{"text": "🖼️ Welcome Photo", "callback": "edit_welcome_photo"}]]
+            {"text": "✏️ ওয়েলকাম মেসেজ", "callback": "edit_welcome_msg"},
+            {"text": "✏️ লক মেসেজ", "callback": "edit_lock_msg"}
+        ], [{"text": "🖼️ ওয়েলকাম ফটো", "callback": "edit_welcome_photo"}]]
         await query.edit_message_text(
-            ui.format_text("📝 <b>Message Editor</b>\nChoose a message to customize:", user),
+            ui.format_text("📝 <b>মেসেজ এডিটর</b>\nকাস্টমাইজ করার জন্য একটি মেসেজ চয়েজ করুন:", user),
             reply_markup=ui.create_keyboard(buttons),
             parse_mode=ParseMode.HTML
         )
 
     elif data == "menu_links":
         buttons = [[
-            {"text": "🔗 Watch URL", "callback": "edit_watch_url"},
-            {"text": "🔘 Button Text", "callback": "edit_btn_text"}
-        ], [{"text": "⏱️ Auto Delete", "callback": "edit_auto_delete"}]]
+            {"text": "🔗 ওয়াচ URL", "callback": "edit_watch_url"},
+            {"text": "🔘 বাটন টেক্সট", "callback": "edit_btn_text"}
+        ], [{"text": "⏱️ অটো ডিলিট", "callback": "edit_auto_delete"}]]
         await query.edit_message_text(
-            ui.format_text("🔗 <b>Link Settings</b>\nCustomize your links here:", user),
+            ui.format_text("🔗 <b>লিংক সেটিংস</b>\nআপনার লিংক কাস্টমাইজ করুন:", user),
             reply_markup=ui.create_keyboard(buttons),
             parse_mode=ParseMode.HTML
         )
 
     elif data == "menu_channels":
         channels = db.get_channels()
-        text = "📢 <b>Channel Manager</b>\n\n" + ("\n".join([f"{i+1}. {c['name']}" for i, c in enumerate(channels)]) if channels else "No channels added.")
-        buttons = [[{"text": f"❌ Remove {c['name']}", "callback": f"remove_channel_{c['id']}"}] for c in channels]
-        buttons.append([{"text": "➕ Add New Channel", "callback": "add_channel_start"}])
+        text = "📢 <b>চ্যানেল ম্যানেজার</b>\n\n" + ("\n".join([f"{i+1}. {c['name']}" for i, c in enumerate(channels)]) if channels else "কোন চ্যানেল অ্যাড করা হয়নি।")
+        buttons = [[{"text": f"❌ {c['name']} রিমুভ করুন", "callback": f"remove_channel_{c['id']}"}] for c in channels]
+        buttons.append([{"text": "➕ নতুন চ্যানেল অ্যাড করুন", "callback": "add_channel_start"}])
         await query.edit_message_text(ui.format_text(text, user), reply_markup=ui.create_keyboard(buttons), parse_mode=ParseMode.HTML)
 
     elif data == "menu_security":
         m = db.get_config('maint_mode')
         f = db.get_config('force_join')
         buttons = [
-            [{"text": f"🔄 Maint: {m}", "callback": "toggle_maint"}, {"text": f"🔄 Force: {f}", "callback": "toggle_force"}],
-            [{"text": "🚫 Block User", "callback": "block_user_start"}, {"text": "✅ Unblock", "callback": "unblock_user_start"}]
+            [{"text": f"🔄 মেইনটেনেন্স: {m}", "callback": "toggle_maint"}, {"text": f"🔄 ফোর্স জয়েন: {f}", "callback": "toggle_force"}],
+            [{"text": "🚫 ইউজার ব্লক করুন", "callback": "block_user_start"}, {"text": "✅ আনব্লক করুন", "callback": "unblock_user_start"}]
         ]
-        await query.edit_message_text(ui.format_text(f"🛡️ <b>Security Control</b>\nMaint: {m} | Force Join: {f}", user), reply_markup=ui.create_keyboard(buttons), parse_mode=ParseMode.HTML)
+        await query.edit_message_text(ui.format_text(f"🛡️ <b>সিকিউরিটি কন্ট্রোল</b>\nমেইনটেনেন্স: {m} | ফোর্স জয়েন: {f}", user), reply_markup=ui.create_keyboard(buttons), parse_mode=ParseMode.HTML)
 
     elif data == "menu_marketing":
-        buttons = [[{"text": "📝 Create Post", "callback": "create_post_start"}, {"text": "📢 Broadcast", "callback": "broadcast_start"}]]
-        await query.edit_message_text(ui.format_text("📡 <b>Marketing Tools</b>\nPromote your content:", user), reply_markup=ui.create_keyboard(buttons), parse_mode=ParseMode.HTML)
+        buttons = [{"text": "📝 পোস্ট তৈরি করুন", "callback": "create_post_start"}, {"text": "📢 ব্রডকাস্ট", "callback": "broadcast_start"}]
+        await query.edit_message_text(ui.format_text("📡 <b>মার্কেটিং টুলস</b>\nআপনার কনটেন্ট প্রমোট করুন:", user), reply_markup=ui.create_keyboard(buttons), parse_mode=ParseMode.HTML)
 
     elif data == "menu_stats":
         await query.edit_message_text(ui.format_text(ui.get_stats_display(db.get_stats()), user), reply_markup=ui.create_keyboard([]), parse_mode=ParseMode.HTML)
 
     elif data == "menu_vip":
-        buttons = [[{"text": "➕ Add VIP", "callback": "add_vip_start"}, {"text": "➖ Remove VIP", "callback": "remove_vip_start"}]]
-        await query.edit_message_text(ui.format_text("👑 <b>VIP Management</b>\nControl premium users:", user), reply_markup=ui.create_keyboard(buttons), parse_mode=ParseMode.HTML)
+        buttons = [{"text": "➕ ভিআইপি অ্যাড করুন", "callback": "add_vip_start"}, {"text": "➖ ভিআইপি রিমুভ করুন", "callback": "remove_vip_start"}]
+        await query.edit_message_text(ui.format_text("👑 <b>ভিআইপি ম্যানেজমেন্ট</b>\nপ্রিমিয়াম ইউজার কন্ট্রোল:", user), reply_markup=ui.create_keyboard(buttons), parse_mode=ParseMode.HTML)
 
     elif data == "menu_system":
-        buttons = [[{"text": "💾 Backup Now", "callback": "backup_now"}]]
-        await query.edit_message_text(ui.format_text("⚙️ <b>System Tools</b>", user), reply_markup=ui.create_keyboard(buttons), parse_mode=ParseMode.HTML)
+        buttons = [{"text": "💾 এখনই ব্যাকআপ করুন", "callback": "backup_now"}]
+        await query.edit_message_text(ui.format_text("⚙️ <b>সিস্টেম টুলস</b>", user), reply_markup=ui.create_keyboard(buttons), parse_mode=ParseMode.HTML)
 
-    # Actions
+    # অ্যাকশনস
     elif data.startswith("edit_"):
         key = data.replace("edit_", "")
         context.user_data['edit_key'] = key
-        await query.message.reply_text(f"✏️ <b>Send new value for:</b> <code>{key}</code>", parse_mode=ParseMode.HTML)
+        await query.message.reply_text(f"✏️ <b>নতুন ভ্যালু পাঠান:</b> <code>{key}</code>", parse_mode=ParseMode.HTML)
         return Config.STATE_EDIT_CONFIG
     
     elif data.startswith("toggle_"):
@@ -1326,43 +1329,43 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await callback_handler(update, context)
 
     elif data == "add_channel_start":
-        await query.message.reply_text("➕ <b>Send Channel ID/Username:</b>\nExample: @mychannel or -100123...", parse_mode=ParseMode.HTML)
+        await query.message.reply_text("➕ <b>চ্যানেল ID/ইউজারনেম পাঠান:</b>\nউদাহরণ: @mychannel বা -100123...", parse_mode=ParseMode.HTML)
         return Config.STATE_CHANNEL_ADD_ID
 
     elif data == "create_post_start":
-        await query.message.reply_text("📝 <b>Send Post Caption:</b>", parse_mode=ParseMode.HTML)
+        await query.message.reply_text("📝 <b>পোস্ট ক্যাপশন পাঠান:</b>", parse_mode=ParseMode.HTML)
         context.user_data['post_wizard'] = {}
         return Config.STATE_POST_CAPTION
 
     elif data == "broadcast_start":
-        await query.message.reply_text("📢 <b>Send Message to Broadcast:</b>\n(Text, Photo or Video)", parse_mode=ParseMode.HTML)
+        await query.message.reply_text("📢 <b>ব্রডকাস্ট করার মেসেজ পাঠান:</b>\n(টেক্সট, ফটো বা ভিডিও)", parse_mode=ParseMode.HTML)
         return Config.STATE_BROADCAST
 
     elif data == "backup_now":
         f = db.create_backup()
-        await query.answer("✅ Backup Created!" if f else "❌ Failed!", show_alert=True)
+        await query.answer("✅ ব্যাকআপ তৈরি হয়েছে!" if f else "❌ ব্যর্থ!", show_alert=True)
 
 async def show_admin_panel(message, user):
     text = f"""
-{Config.EMOJIS['admin']} <b>SUPREME GOD ADMIN PANEL</b>
-{Config.EMOJIS['fire']} <b>Welcome Boss!</b>
+{Config.EMOJIS['admin']} <b>সুপ্রিম গড এডমিন প্যানেল</b>
+{Config.EMOJIS['fire']} <b>স্বাগতম বস!</b>
 """
     await message.edit_text(ui.format_text(text, user), reply_markup=ui.get_admin_menu(), parse_mode=ParseMode.HTML)
 
 # ==============================================================================
-# ✏️ CONVERSATION HANDLERS
+# ✏️ কনভারসেশন হ্যান্ডলারস
 # ==============================================================================
 
 async def edit_config_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     key = context.user_data.get('edit_key')
     if key and db.set_config(key, update.message.text):
-        await update.message.reply_text(f"✅ <b>{key}</b> updated!", parse_mode=ParseMode.HTML)
+        await update.message.reply_text(f"✅ <b>{key}</b> আপডেট হয়েছে!", parse_mode=ParseMode.HTML)
     context.user_data.clear()
     return ConversationHandler.END
 
 async def post_caption_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data['post_wizard']['caption'] = update.message.text_html
-    await update.message.reply_text("📸 <b>Send Photo/Video (or /skip):</b>", parse_mode=ParseMode.HTML)
+    await update.message.reply_text("📸 <b>ফটো/ভিডিও পাঠান (বা /skip):</b>", parse_mode=ParseMode.HTML)
     return Config.STATE_POST_MEDIA
 
 async def post_media_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -1372,7 +1375,7 @@ async def post_media_handler(update: Update, context: ContextTypes.DEFAULT_TYPE)
         context.user_data['post_wizard'].update({'media': update.message.video.file_id, 'type': 'video'})
     else:
         context.user_data['post_wizard'].update({'media': None, 'type': 'text'})
-    await update.message.reply_text("🔘 <b>Send Button Text (or /skip):</b>", parse_mode=ParseMode.HTML)
+    await update.message.reply_text("🔘 <b>বাটন টেক্সট পাঠান (বা /skip):</b>", parse_mode=ParseMode.HTML)
     return Config.STATE_POST_BUTTON
 
 async def post_button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -1381,94 +1384,95 @@ async def post_button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE
     
     channels = db.get_channels()
     buttons = [[{"text": f"📤 {c['name']}", "callback": f"post_to_{c['id']}"}] for c in channels]
-    buttons.append([{"text": "📤 Post to ALL", "callback": "post_to_all"}])
+    buttons.append([{"text": "📤 সব চ্যানেলে পোস্ট করুন", "callback": "post_to_all"}])
     
-    await update.message.reply_text("✅ <b>Select Target Channel:</b>", reply_markup=ui.create_keyboard(buttons, add_back=False), parse_mode=ParseMode.HTML)
+    await update.message.reply_text("✅ <b>টার্গেট চ্যানেল সিলেক্ট করুন:</b>", reply_markup=ui.create_keyboard(buttons, add_back=False), parse_mode=ParseMode.HTML)
     return Config.STATE_POST_CONFIRM
 
 async def post_confirm_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
     data = context.user_data.get('post_wizard', {})
-    btn = InlineKeyboardMarkup([[InlineKeyboardButton(data.get('button_text', 'Click'), url=db.get_config('watch_url'))]])
+    btn = InlineKeyboardMarkup([[InlineKeyboardButton(data.get('button_text', 'ক্লিক করুন'), url=db.get_config('watch_url'))]])
     
-    targets = db.get_channels() if query.data == "post_to_all" else [c for c in db.get_channels() if c['id'] == query.data.replace("post_to_", "")]
+    targets = db.get_channels() if query.data == "post_to_all" else [c for c in db.get_channels() if str(c['id']) == query.data.replace("post_to_", "")]
     
-    await query.message.edit_text(f"⏳ Sending to {len(targets)} channels...")
+    await query.message.edit_text(f"⏳ {len(targets)} টি চ্যানেলে পাঠানো হচ্ছে...")
     
     for ch in targets:
         try:
-            if data['type'] == 'photo': await context.bot.send_photo(ch['id'], data['media'], caption=data['caption'], reply_markup=btn, parse_mode=ParseMode.HTML)
-            elif data['type'] == 'video': await context.bot.send_video(ch['id'], data['media'], caption=data['caption'], reply_markup=btn, parse_mode=ParseMode.HTML)
-            else: await context.bot.send_message(ch['id'], data['caption'], reply_markup=btn, parse_mode=ParseMode.HTML)
-        except: pass
+            if data['type'] == 'photo': 
+                await context.bot.send_photo(ch['id'], data['media'], caption=data['caption'], reply_markup=btn, parse_mode=ParseMode.HTML)
+            elif data['type'] == 'video': 
+                await context.bot.send_video(ch['id'], data['media'], caption=data['caption'], reply_markup=btn, parse_mode=ParseMode.HTML)
+            else: 
+                await context.bot.send_message(ch['id'], data['caption'], reply_markup=btn, parse_mode=ParseMode.HTML)
+        except: 
+            pass
         
-    await query.message.reply_text("✅ <b>Posting Completed!</b>", parse_mode=ParseMode.HTML)
+    await query.message.reply_text("✅ <b>পোস্টিং সম্পূর্ণ!</b>", parse_mode=ParseMode.HTML)
     context.user_data.clear()
     return ConversationHandler.END
 
 async def broadcast_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     users = db.get_all_users()
-    msg = await update.message.reply_text(f"⏳ Broadcasting to {len(users)} users...")
+    msg = await update.message.reply_text(f"⏳ {len(users)} জন ইউজারকে ব্রডকাস্ট করা হচ্ছে...")
     count = 0
     for uid in users:
         try:
             await update.message.copy(uid)
             count += 1
             await asyncio.sleep(0.05)
-        except: pass
-    await msg.edit_text(f"✅ <b>Broadcast sent to {count} users!</b>", parse_mode=ParseMode.HTML)
+        except: 
+            pass
+    await msg.edit_text(f"✅ <b>ব্রডকাস্ট {count} জন ইউজারকে পাঠানো হয়েছে!</b>", parse_mode=ParseMode.HTML)
     return ConversationHandler.END
-
-async def add_channel_handlers(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # Simplified flow for brevity, follows state machine
-    pass # Implementation inside main via State Machine
 
 async def add_channel_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data['cid'] = update.message.text
-    await update.message.reply_text("📝 <b>Channel Name:</b>", parse_mode=ParseMode.HTML)
+    await update.message.reply_text("📝 <b>চ্যানেলের নাম:</b>", parse_mode=ParseMode.HTML)
     return Config.STATE_CHANNEL_ADD_NAME
 
 async def add_channel_name(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data['cname'] = update.message.text
-    await update.message.reply_text("🔗 <b>Channel Link:</b>", parse_mode=ParseMode.HTML)
+    await update.message.reply_text("🔗 <b>চ্যানেল লিংক:</b>", parse_mode=ParseMode.HTML)
     return Config.STATE_CHANNEL_ADD_LINK
 
 async def add_channel_link(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if db.add_channel(context.user_data['cid'], context.user_data['cname'], update.message.text):
-        await update.message.reply_text("✅ Channel Added!", parse_mode=ParseMode.HTML)
+        await update.message.reply_text("✅ চ্যানেল অ্যাড করা হয়েছে!", parse_mode=ParseMode.HTML)
     else:
-        await update.message.reply_text("❌ Failed!", parse_mode=ParseMode.HTML)
+        await update.message.reply_text("❌ ব্যর্থ!", parse_mode=ParseMode.HTML)
     context.user_data.clear()
     return ConversationHandler.END
 
 async def cancel_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("❌ Cancelled.")
+    await update.message.reply_text("❌ বাতিল করা হয়েছে।")
     context.user_data.clear()
     return ConversationHandler.END
 
 # ==============================================================================
-# 🚀 MAIN APPLICATION
+# 🚀 মেইন অ্যাপ্লিকেশন
 # ==============================================================================
 
 def main():
     application = ApplicationBuilder().token(Config.TOKEN).build()
     
-    # Handlers
+    # হ্যান্ডলারস
     application.add_handler(CommandHandler("start", start_command))
     application.add_handler(CommandHandler("admin", admin_command))
     application.add_handler(CommandHandler("stats", stats_command))
     application.add_handler(CommandHandler("help", help_command))
     application.add_handler(CommandHandler("backup", backup_command))
     
-    # Conversation: Config Edit
+    # কনভারসেশন: কনফিগ এডিট
     application.add_handler(ConversationHandler(
         entry_points=[CallbackQueryHandler(callback_handler, pattern='^edit_')],
         states={Config.STATE_EDIT_CONFIG: [MessageHandler(filters.TEXT & ~filters.COMMAND, edit_config_handler)]},
         fallbacks=[CommandHandler('cancel', cancel_handler)]
     ))
     
-    # Conversation: Post
+    # কনভারসেশন: পোস্ট
     application.add_handler(ConversationHandler(
         entry_points=[CallbackQueryHandler(callback_handler, pattern='^create_post_start$')],
         states={
@@ -1480,7 +1484,7 @@ def main():
         fallbacks=[CommandHandler('cancel', cancel_handler)]
     ))
     
-    # Conversation: Add Channel
+    # কনভারসেশন: চ্যানেল অ্যাড
     application.add_handler(ConversationHandler(
         entry_points=[CallbackQueryHandler(callback_handler, pattern='^add_channel_start$')],
         states={
@@ -1491,17 +1495,17 @@ def main():
         fallbacks=[CommandHandler('cancel', cancel_handler)]
     ))
 
-    # Conversation: Broadcast
+    # কনভারসেশন: ব্রডকাস্ট
     application.add_handler(ConversationHandler(
         entry_points=[CallbackQueryHandler(callback_handler, pattern='^broadcast_start$')],
         states={Config.STATE_BROADCAST: [MessageHandler(filters.ALL & ~filters.COMMAND, broadcast_handler)]},
         fallbacks=[CommandHandler('cancel', cancel_handler)]
     ))
     
-    # Global Callback
+    # গ্লোবাল কলব্যাক
     application.add_handler(CallbackQueryHandler(callback_handler))
     
-    print("🤖 Bot Started Successfully...")
+    print("🤖 বট সফলভাবে শুরু হয়েছে...")
     application.run_polling()
 
 if __name__ == "__main__":
