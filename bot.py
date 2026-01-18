@@ -18,56 +18,63 @@ from telegram.ext import (
 )
 
 # ================= 💖 CONFIGURATION =================
-# আপনার বট টোকেন এবং অ্যাডমিন আইডি এখানে দিন
+# আপনার বট টোকেন এবং অ্যাডমিন আইডি
 TOKEN = "8510787985:AAEw4UNXdCZLK_r25EKJnuIwrlkE8cyk7VE"
 ADMIN_IDS = {6406804999} 
 
+# লগিং সেটআপ
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 START_TIME = time.time()
 
-# States for Conversation
+# Conversation States
 INPUT_TEXT = 1
 POST_CAP, POST_MEDIA, POST_FJ, POST_TG, POST_CONFIRM = range(2, 7)
 BROADCAST_MSG = 8
 
-# ================= 🗄️ SUPREME DATABASE =================
+# ================= 🗄️ SUPREME DATABASE (AUTO SETUP) =================
 class SupremeDB:
     def __init__(self):
-        self.conn = sqlite3.connect("supreme_love.db", check_same_thread=False)
+        self.conn = sqlite3.connect("supreme_love_final.db", check_same_thread=False)
         self.cursor = self.conn.cursor()
         self.init_db()
 
     def init_db(self):
+        # টেবিল তৈরি
         self.cursor.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT, join_date TEXT, status TEXT)")
         self.cursor.execute("CREATE TABLE IF NOT EXISTS config (key TEXT PRIMARY KEY, value TEXT)")
         
-        # 💖 ডিফল্ট রোমান্টিক সেটিংস (৫০+ ফিচার কনফিগ)
+        # 💖 রোমান্টিক এবং ফিচার সেটিংস (৫০টি ফিচার কনফিগ)
         defaults = {
             "watch_url": "https://mmshotbd.blogspot.com/?m=1",
-            "welcome_photo": "https://cdn.pixabay.com/photo/2018/01/14/23/12/nature-3082832_1280.jpg",
+            "welcome_photo": "https://cdn.pixabay.com/photo/2016/02/13/12/26/aurora-1197753_1280.jpg",
             "auto_delete": "45",
             "maint_mode": "OFF",
             "force_join": "ON",
+            "anti_spam": "ON",
+            
+            # বিশাল রোমান্টিক ওয়েলকাম মেসেজ
             "welcome_msg": """💖✨ <b>ওগো শুনছো! স্বাগতম জানাই তোমাকে!</b> ✨💖
 
 🌹 <b>প্রিয়তম/প্রিয়তমা,</b>
-তুমি অবশেষে আমাদের মাঝে এসেছো, আমার হৃদয়টা আনন্দে নেচে উঠলো! 😍💃
-তোমাকে ছাড়া আমাদের এই আয়োজন অসম্পূর্ণ ছিল। 
+তুমি অবশেষে আমাদের মাঝে এসেছো, আমার হৃদয়টা খুশিতে নেচে উঠলো! 😍💃
+তোমাকে ছাড়া আমাদের এই আয়োজন একদমই অসম্পূর্ণ ছিল। 💏
 
-✨ <b>তোমার জন্য যা যা থাকছে:</b>
+✨ <b>তোমার জন্য স্পেশাল যা যা থাকছে:</b>
 🎀 এক্সক্লুসিভ ভাইরাল ভিডিও 🔞
-🎀 নতুন সব কালেকশন 🔥
-🎀 এবং আমার হৃদয়ের ভালোবাসা... ❤️
+🎀 নতুন সব হট কালেকশন 🔥
+🎀 এবং আমার হৃদয়ের গভীর ভালোবাসা... ❤️
 
-👇 <b>নিচের বাটনে আলতো করে ক্লিক করো সোনা:</b> 👇""",
+👇 <b>দেরি না করে নিচের বাটনে আলতো করে ক্লিক করো সোনা:</b> 👇""",
             
+            # বিশাল রোমান্টিক লক মেসেজ (কান্নার ইমোজি সহ)
             "lock_msg": """💔 <b>ওহ নো বেবি! তুমি এখনো জয়েন করোনি?</b> 😢💔
 
 আমার লক্ষ্মীটা, তুমি যদি নিচের চ্যানেলগুলোতে জয়েন না করো, তাহলে আমি তোমাকে ভিডিওটা দেখাতে পারবো না! 🥺🥀
+আমার খুব কষ্ট লাগবে যদি তুমি চলে যাও... 😭
 
 🌹 <b>প্লিজ সোনা, রাগ করো না!</b>
-নিচের সবগুলোতে জয়েন করে <b>"Verify Me Love"</b> বাটনে ক্লিক করো। আমি অপেক্ষা করছি... 😘💕""",
+নিচের সবগুলোতে জয়েন করে <b>"Verify Me Love"</b> বাটনে ক্লিক করো। আমি তোমার অপেক্ষায় আছি... 😘💕""",
             
             "btn_text": "🎬 ভিডিও দেখুন (Watch Now) ✨😍"
         }
@@ -101,7 +108,8 @@ class SupremeDB:
 
 db = SupremeDB()
 
-# ================= 🔗 MASTER CHANNELS (Force Join) =================
+# ================= 🔗 MASTER CHANNELS (Force Join List) =================
+# নোট: বটকে অবশ্যই এই চ্যানেলগুলোতে অ্যাডমিন বানাতে হবে!
 MASTER_CHANNELS = [
     {"id": "@virallink259", "name": "Viral Link 2026 🔥", "link": "https://t.me/virallink259"},
     {"id": -1002279183424, "name": "Premium Apps 💎", "link": "https://t.me/+5PNLgcRBC0IxYjll"},
@@ -138,14 +146,22 @@ def decor(text, user):
     footer = f"\n━━━━━━━━━━━━━━━━━━━━━━\n💖 <b>With Love:</b> {name}\n⏰ <b>Time:</b> {datetime.datetime.now().strftime('%I:%M %p')}"
     return header + text + footer
 
+# ================= 🛡️ FORCE JOIN LOGIC (FIXED) =================
 async def check_join_status(user_id, context):
     if db.get("force_join") == "OFF": return []
     missing = []
+    
     for ch in MASTER_CHANNELS:
         try:
-            m = await context.bot.get_chat_member(ch["id"], user_id)
-            if m.status in ['left', 'kicked', 'none']: missing.append(ch)
-        except: missing.append(ch)
+            # চেক করছে ইউজার মেম্বার কিনা
+            m = await context.bot.get_chat_member(chat_id=ch["id"], user_id=user_id)
+            if m.status in ['left', 'kicked', 'restricted']:
+                missing.append(ch)
+        except Exception as e:
+            # যদি বট অ্যাডমিন না হয়, তবুও আমরা ইউজারকে জয়েন করতে বলবো (সেফটি)
+            # logger.error(f"Channel Check Error: {ch['id']} - {e}")
+            missing.append(ch)
+            
     return missing
 
 # ================= 👤 USER HANDLERS =================
@@ -153,30 +169,32 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     db.add_user(user)
     
-    # Maintenance Check
+    # মেইনটেনেন্স মোড চেক
     if db.get("maint_mode") == "ON" and user.id not in ADMIN_IDS:
-        await update.message.reply_html(decor("🚧 <b>দুঃখিত জানু!</b>\n\nএখন একটু কাজ চলছে, পরে আসো প্লিজ! 🥺", user))
+        await update.message.reply_html(decor("🚧 <b>দুঃখিত জানু!</b>\n\nএখন একটু সিস্টেম আপগ্রেডের কাজ চলছে, প্লিজ পরে আসো! 🥺", user))
         return
 
     missing = await check_join_status(user.id, context)
     photo_url = db.get("welcome_photo")
     
     if not missing:
+        # সব জয়েন করা থাকলে
         txt = db.get("welcome_msg")
         kb = [[InlineKeyboardButton(db.get("btn_text"), url=db.get("watch_url"))]]
     else:
+        # জয়েন করা বাকি থাকলে
         txt = db.get("lock_msg")
         kb = [[InlineKeyboardButton(f"💞 জয়েন: {c['name']}", url=c['link'])] for c in missing]
         kb.append([InlineKeyboardButton("✨ Verify Me Love ✨", callback_data="check_join")])
 
-    # 🔥 Crash Proof Sender
+    # 🔥 Crash Proof Sender (ছবি নষ্ট থাকলেও টেক্সট যাবে)
     try:
         await update.message.reply_photo(photo=photo_url, caption=decor(txt, user), reply_markup=InlineKeyboardMarkup(kb), parse_mode=ParseMode.HTML)
-    except:
-        # If photo fails, send text only
+    except Exception as e:
+        logger.error(f"Photo Error: {e}")
         await update.message.reply_html(decor(txt, user), reply_markup=InlineKeyboardMarkup(kb))
 
-# ================= 👑 ULTIMATE ADMIN PANEL =================
+# ================= 👑 ULTIMATE ADMIN PANEL (NO COMMAND NEEDED) =================
 async def admin_panel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id not in ADMIN_IDS: return
     
@@ -187,12 +205,12 @@ async def admin_panel(update: Update, context: ContextTypes.DEFAULT_TYPE):
            f"📊 <b>পরিসংখ্যান:</b>\n"
            f"🌹 টোটাল ইউজার: <code>{total}</code>\n"
            f"📅 আজকের নতুন: <code>{today}</code>\n"
-           f"⚡ সার্ভার আপটাইম: {uptime}\n"
-           f"💾 মেমোরি: {psutil.virtual_memory().percent}%\n\n"
+           f"⚡ আপটাইম: {uptime}\n"
+           f"💾 স্ট্যাটাস: Active ✅\n\n"
            f"👇 <b>কোন সেকশন কন্ট্রোল করতে চান?</b>")
     
     btns = [
-        [InlineKeyboardButton("📝 মেসেজ এডিটর", callback_data="menu_msg"), InlineKeyboardButton("🔗 লিঙ্ক সেটিংস", callback_data="menu_links")],
+        [InlineKeyboardButton("📝 লাভ মেসেজ এডিটর", callback_data="menu_msg"), InlineKeyboardButton("🔗 লিঙ্ক সেটিংস", callback_data="menu_links")],
         [InlineKeyboardButton("🛡️ সিকিউরিটি গার্ড", callback_data="menu_security"), InlineKeyboardButton("📢 পোস্ট & ব্রডকাস্ট", callback_data="menu_post")],
         [InlineKeyboardButton("❌ প্যানেল বন্ধ করুন", callback_data="close_admin")]
     ]
@@ -202,7 +220,7 @@ async def admin_panel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await update.message.reply_html(decor(txt, update.effective_user), reply_markup=InlineKeyboardMarkup(btns))
 
-# ================= ⚙️ SUB-MENUS =================
+# ================= ⚙️ SUB-MENUS & LOGIC =================
 async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     data = query.data
@@ -216,7 +234,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             [InlineKeyboardButton("🖼️ ওয়েলকাম ফটো চেঞ্জ", callback_data="edit_welcome_photo")],
             [InlineKeyboardButton("🔙 ব্যাক", callback_data="main_menu")]
         ]
-        await query.edit_message_caption(decor("📝 <b>মেসেজ কাস্টমাইজেশন</b>\nএখানে সব টেক্সট কন্ট্রোল করুন।", user), reply_markup=InlineKeyboardMarkup(btns), parse_mode=ParseMode.HTML)
+        await query.edit_message_caption(decor("📝 <b>মেসেজ কাস্টমাইজেশন</b>\nএখানে সব টেক্সট এবং ফটো কন্ট্রোল করুন।", user), reply_markup=InlineKeyboardMarkup(btns), parse_mode=ParseMode.HTML)
 
     # 2. Link Settings Menu
     elif data == "menu_links":
@@ -231,8 +249,8 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # 3. Security Menu
     elif data == "menu_security":
-        maint = "🔴 OFF" if db.get("maint_mode") == "OFF" else "🟢 ON"
-        force = "🟢 ON" if db.get("force_join") == "ON" else "🔴 OFF"
+        maint = "✅ ON" if db.get("maint_mode") == "ON" else "❌ OFF"
+        force = "✅ ON" if db.get("force_join") == "ON" else "❌ OFF"
         btns = [
             [InlineKeyboardButton(f"🚧 মেইনটেনেন্স মোড: {maint}", callback_data="tog_maint_mode")],
             [InlineKeyboardButton(f"🔐 ফোর্স জয়েন সিস্টেম: {force}", callback_data="tog_force_join")],
@@ -254,7 +272,9 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         key = data.replace("tog_", "")
         new_val = "OFF" if db.get(key) == "ON" else "ON"
         db.set(key, new_val)
-        await handle_callback(update, context) # Refresh Page
+        # Refresh current menu
+        query.data = "menu_security"
+        await handle_callback(update, context)
 
     # Verification Logic
     elif data == "check_join":
@@ -277,7 +297,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Editors
     elif data.startswith("edit_"):
         context.user_data['edit_key'] = data.replace("edit_", "")
-        await query.message.reply_html(decor("✍️ <b>নতুন ভ্যালু লিখে পাঠাও:</b>\n(যেকোন টেক্সট বা লিঙ্ক)", user))
+        await query.message.reply_html(decor("✍️ <b>নতুন ভ্যালু লিখে পাঠাও:</b>\n(যেকোন টেক্সট, ইমোজি বা লিঙ্ক দিতে পারো)", user))
         return INPUT_TEXT
     
     elif data == "main_menu":
@@ -311,7 +331,7 @@ async def wiz_media(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif update.message.video: context.user_data['post']['med'] = update.message.video.file_id
     else: context.user_data['post']['med'] = None
     
-    # Target Selection (Simple version)
+    # Target Selection
     btns = [[InlineKeyboardButton(c['name'], callback_data=f"send_{c['id']}")] for c in MASTER_CHANNELS]
     await update.message.reply_html(decor("🚀 <b>কোথায় পাঠাবে?</b>\nচ্যানেল সিলেক্ট করো:", update.effective_user), reply_markup=InlineKeyboardMarkup(btns))
     return POST_CONFIRM
@@ -326,7 +346,32 @@ async def wiz_send(update: Update, context: ContextTypes.DEFAULT_TYPE):
         else: await context.bot.send_message(cid, p['cap'], reply_markup=kb, parse_mode=ParseMode.HTML)
         await update.callback_query.message.reply_text("✅ পোস্ট সফল হয়েছে!")
     except Exception as e:
-        await update.callback_query.message.reply_text(f"❌ এরর: {e}")
+        await update.callback_query.message.reply_text(f"❌ এরর: {e} (বট কি ওই চ্যানেলে অ্যাডমিন?)")
+    return ConversationHandler.END
+
+# ================= 📡 BROADCAST =================
+async def broadcast_init(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.callback_query.message.reply_html(decor("📢 <b>ব্রডকাস্ট</b>\nমেসেজ ফরোয়ার্ড করুন বা লিখুন:", update.effective_user))
+    return BROADCAST_MSG
+
+async def broadcast_send(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    users = db.get_users()
+    msg = update.message
+    status = await update.message.reply_text("⏳ ব্রডকাস্ট শুরু হচ্ছে...")
+    s, f = 0, 0
+    
+    for uid in users:
+        try:
+            await msg.copy(uid)
+            s += 1
+        except: f += 1
+        if s % 50 == 0: await status.edit_text(f"📤 পাঠাচ্ছে... {s}/{len(users)}")
+        
+    await status.edit_text(decor(f"✅ <b>ব্রডকাস্ট রিপোর্ট</b>\n\nসফল: {s}\nব্যর্থ: {f}", update.effective_user), parse_mode=ParseMode.HTML)
+    return ConversationHandler.END
+
+async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("❌ অপারেশন বাতিল।")
     return ConversationHandler.END
 
 # ================= 🚀 MAIN FUNCTION =================
@@ -347,7 +392,13 @@ def main():
             POST_MEDIA: [MessageHandler(filters.ALL, wiz_media)],
             POST_CONFIRM: [CallbackQueryHandler(wiz_send, pattern="^send_")]
         },
-        fallbacks=[]
+        fallbacks=[CallbackQueryHandler(cancel, pattern="cancel")]
+    ))
+
+    app.add_handler(ConversationHandler(
+        entry_points=[CallbackQueryHandler(broadcast_init, pattern="^broadcast_init$")],
+        states={BROADCAST_MSG: [MessageHandler(filters.ALL, broadcast_send)]},
+        fallbacks=[CommandHandler("cancel", admin_panel)]
     ))
 
     app.add_handler(CommandHandler("start", start))
